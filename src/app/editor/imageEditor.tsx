@@ -103,11 +103,17 @@ export default function ImageEditor(props: ImageEditorProps) {
                             position: "absolute",
                             top: `${hold.y}%`,
                             left: `${hold.x}%`,
-                            width: "50px",
-                            height: "50px",
-                            backgroundColor: "rgba(255, 255, 255, 0.5)", // Semi-transparent white box
-                            // transform: "translate(-50%, -50%)", //TODO: This is important; This centers the box at the 25% x and 25% position
+                            width: "1px",
+                            height: "1px",
                         }}>
+                            <div style={{
+                                position: "relative",
+                                width: "50px",
+                                height: "50px",
+                                backgroundColor: "rgba(255, 255, 255, 0.5)", // Semi-transparent white box
+                                transform: "translate(-50%, -50%)", // This centers the box at the hold.x% and hold.y% position
+                            }}>
+                            </div>
                         </div>
                     </Draggable>
                 ))}
