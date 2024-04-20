@@ -1,6 +1,6 @@
 import {saveAs} from "file-saver";
 import Draggable from "react-draggable";
-import React from "react";
+import React, { useRef, useEffect, useState } from 'react';
 import {ClimbingRoute, HoldData} from "@/app/editor/climbingRoute";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -11,7 +11,7 @@ interface ImageEditorProps {
 export default function ImageEditor(props: ImageEditorProps) {
     const [route, setRoute] = props.routeState
 
-    const handleStop = (id: string, mysticalIgnoredParameter: any, data: { x: number; y: number }) => {
+    const handleStop = (id: string, data: { x: number; y: number }) => {
         const hold = route.holds.filter(it => it.id == id)[0]
         hold.x = data.x
         hold.y = data.y
@@ -20,7 +20,6 @@ export default function ImageEditor(props: ImageEditorProps) {
 
     const createObject = () => {
         const newHold: HoldData = {
-            // id: randomUUID(),
             id: uuidv4(),
             x: 0,
             y: 0
@@ -40,16 +39,19 @@ export default function ImageEditor(props: ImageEditorProps) {
 
     return (
         <div>
-            <img src={route.image} alt={route.name} style={{ position: 'relative' }} />
-            {route.holds.map((object) => (
-                <Draggable
-                    key={object.id}
-                    defaultPosition={{ x: object.x, y: object.y }}
-                    onStop={(e, data) => handleStop(object.id, e, data)}
-                >
-                    <div style={{ position: 'absolute' }}>Object {object.id}</div>
-                </Draggable>
-            ))}
+            <div style={{ position: 'relative', width: '100%', height: 'auto' }}>
+                <img src={route.image} alt={route.name} style={{width: '100%', height: 'auto' }} />
+                {route.holds.map((object) => (
+                    <Draggable
+                        bounds={"parent"}
+                        key={object.id}
+                        defaultPosition={{ x: object.x, y: object.y }}
+                        onStop={(e, data) => handleStop(object.id, data)}
+                    >
+                        <div style={{ position: 'absolute' }}>Object {object.id}</div>
+                    </Draggable>
+                ))}
+            </div>
             <button onClick={createObject}>Create Object</button>
             <button onClick={saveObjects}>Save Objects</button>
         </div>
