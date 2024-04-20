@@ -13,11 +13,7 @@ interface ObjectData {
 }
 
 function ImageEditor() {
-    const [objects, setObjects] = useState<ObjectData[]>([
-        { id: 1, x: 0, y: 0 },
-        { id: 2, x: 0, y: 0 },
-        // add objects here
-    ]);
+    const [objects, setObjects] = useState<ObjectData[]>([]);
 
     const handleStop = (id: number, e: any, data: { x: number; y: number }) => {
         setObjects(objects.map(object =>
@@ -26,7 +22,7 @@ function ImageEditor() {
     };
 
     const createObject = () => {
-        const id = Math.max(...objects.map(object => object.id)) + 1;
+        const id = objects[0] ? Math.max(...objects.map(object => object.id)) + 1 : 1;
         const newObject = { id, x: 0, y: 0 };
         setObjects([...objects, newObject]);
     };
