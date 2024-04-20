@@ -87,6 +87,11 @@ export default function ImageEditor(props: ImageEditorProps) {
         }
 
         setRoute(
+            // both holds and naturals are arrays, so we need to spread the existing
+            // arrays and add the new hold and natural
+
+            // because of the way state works in react, even though we call setRoute 3 times, 
+            // it only updates during the last call
             {
                 ...route,
                 holds: [...route.holds, hold1id, hold2id],
@@ -139,6 +144,22 @@ export default function ImageEditor(props: ImageEditorProps) {
                         </div>
                     </Draggable>
                 ))}
+                {route.naturals.map((natural: NaturalData) => {
+                const hold1 = route.holds.find(hold => hold.id === natural.hold1id);
+                const hold2 = route.holds.find(hold => hold.id === natural.hold2id);
+
+                return (
+                    <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none'}}>
+                        <line
+                            x1={`${hold1.x}%`}
+                            y1={`${hold1.y}%`}
+                            x2={`${hold2.x}%`}
+                            y2={`${hold2.y}%`}
+                            stroke="black"
+                        />
+                    </svg>
+                );
+            })}
             </div>
             <Button onClick={() => createHold()}>Create Hold</Button>
             <Button onClick={createNatural}>Create Natural</Button>
