@@ -37,7 +37,11 @@ function RouteEditor() {
                 />
             </Box>
             <Box style={{width: "25%"}}>
-                <HoldEditor routeState={[route, setRoute]}/>
+                <HoldEditor
+                    routeState={[route, setRoute]}
+                    highlightedState={[highlightedHold, setHighlightedHold]}
+                    selectedState={[selectedHold, setSelectedHold]}
+                />
             </Box>
         </Stack>
     </>

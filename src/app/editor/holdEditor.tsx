@@ -6,10 +6,14 @@ import {TextField, Typography} from "@mui/material";
 
 interface HoldEditorProps {
     routeState: [ClimbingRoute, (value: (((prevState: ClimbingRoute) => ClimbingRoute) | ClimbingRoute)) => void]
+    highlightedState: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void]
+    selectedState: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void]
 }
 
 export default function HoldEditor(props: HoldEditorProps) {
     const [route, setRoute] = props.routeState
+    const [highlighted, setHighlighted] = props.highlightedState
+    const [selected, setSelected] = props.selectedState
     //we want to take our holds and naturals and make a list of effective hold ids
     const [unownedHolds, setUnownedHolds] = useState<HoldData[]>([])
 
@@ -20,13 +24,14 @@ export default function HoldEditor(props: HoldEditorProps) {
     }, [route]);
 
     return <Stack spacing={1} padding={'1rem'} style={{width: "100%"}}>
-        {unownedHolds.map(hold =>
+        {unownedHolds.toSorted((a, b) => a.id.localeCompare(b.id)).map(hold =>
             <SingleHold
                 name={hold.id.substring(0, 4)}
-                onHover={() => {}}
-                onSelect={() => {}}
-                isHovered={false}
-                isSelected={false}
+                onHover={() => setHighlighted(hold.id)}
+                onHoverEnd={() => setHighlighted(null)}
+                onSelect={() => setSelected(hold.id)}
+                isHovered={hold.id == highlighted}
+                isSelected={hold.id == selected}
             />
         )}
     </Stack>
@@ -35,6 +40,7 @@ export default function HoldEditor(props: HoldEditorProps) {
 interface SingleHoldProps {
     name: string,
     onHover: () => void,
+    onHoverEnd: () => void,
     onSelect: () => void,
     isHovered: boolean,
     isSelected: boolean
@@ -43,11 +49,15 @@ interface SingleHoldProps {
 function SingleHold(props: SingleHoldProps) {
     return <>
         <Box style={{
-            backgroundColor: "darkgray",
+            backgroundColor: props.isSelected ? "#488bc7" : (props.isHovered ? "grey" : "#292929"),
             borderRadius: "10px",
             minHeight: "2.5rem",
             width: "100%"
-        }}>
+        }}
+             onMouseEnter={() => props.onHover()}
+             onMouseLeave={() => props.onHoverEnd()}
+             onClick={() => props.onSelect()}
+        >
             <Stack direction={"row"} alignItems={"center"} padding={"0.5rem"}>
                 <Typography fontWeight={"bold"}>Hold: </Typography>
                 <Typography marginLeft={"auto"} fontWeight={"bold"}>{props.name}</Typography>
