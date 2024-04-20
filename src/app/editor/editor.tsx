@@ -24,13 +24,21 @@ function RouteEditor() {
         defaultRoute
     );
 
+    const [highlightedHold, setHighlightedHold]: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void] = useState<string|null>(null)
+    const [selectedHold, setSelectedHold]: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void] = useState<string|null>(null)
+
     return <>
         <Stack direction={"row"}>
-            {/*<DragWithOverlay/>*/}
-            <Box style={{maxWidth: "75%", backgroundColor: "red"}}>
-                <ImageEditor routeState={[route, setRoute]}/>
+            <Box style={{width: "75%", backgroundColor: "red"}}>
+                <ImageEditor
+                    routeState={[route, setRoute]}
+                    highlightedState={[highlightedHold, setHighlightedHold]}
+                    selectedState={[selectedHold, setSelectedHold]}
+                />
             </Box>
-            <HoldEditor routeState={[route, setRoute]}/>
+            <Box style={{width: "25%"}}>
+                <HoldEditor routeState={[route, setRoute]}/>
+            </Box>
         </Stack>
     </>
 }

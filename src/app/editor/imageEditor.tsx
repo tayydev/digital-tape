@@ -38,10 +38,14 @@ const useComponentSize = (): [React.RefObject<HTMLDivElement>, Size] => {
 
 interface ImageEditorProps {
     routeState: [ClimbingRoute, (value: (((prevState: ClimbingRoute) => ClimbingRoute) | ClimbingRoute)) => void]
+    highlightedState: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void]
+    selectedState: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void]
 }
 
 export default function ImageEditor(props: ImageEditorProps) {
     const [route, setRoute] = props.routeState //climbing route state
+    const [highlighted, setHighlighted] = props.highlightedState
+    const [selected, setSelected] = props.selectedState
     const [ref, size] = useComponentSize() //image size state
 
     const handleStop = (id: string, data: { x: number; y: number }) => {
