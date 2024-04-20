@@ -23,7 +23,7 @@ function RouteEditor() {
 
     return <>
         <Stack direction={"row"}>
-            <Box style={{maxWidth: "50%"}} color={"red"}>
+            <Box style={{maxWidth: "50%", backgroundColor: "red"}}>
                 <ImageEditor routeState={[route, setRoute]}/>
             </Box>
             <HoldEditor routeState={[route, setRoute]}/>
