@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import Draggable from "react-draggable";
 import { saveAs } from "file-saver";
-import dynamic from 'next/dynamic';
 
 const myImage = "/resources/MOCK_rock_wall.jpg";
 
@@ -26,6 +25,12 @@ function ImageEditor() {
         ));
     };
 
+    const createObject = () => {
+        const id = Math.max(...objects.map(object => object.id)) + 1;
+        const newObject = { id, x: 0, y: 0 };
+        setObjects([...objects, newObject]);
+    };
+
     const saveObjects = () => {
         const blob = new Blob([JSON.stringify(objects)], {type: "text/plain;charset=utf-8"});
         saveAs(blob, "objects.json");
@@ -43,6 +48,7 @@ function ImageEditor() {
                     <div style={{ position: 'absolute' }}>Object {object.id}</div>
                 </Draggable>
             ))}
+            <button onClick={createObject}>Create Object</button>
             <button onClick={saveObjects}>Save Objects</button>
         </div>
     );
