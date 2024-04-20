@@ -1,7 +1,10 @@
+import ImageEditor from "@/app/editor/editor";
+
 export default function Page() {
     return (
         <main>
-            Hello Climbers Editor Moment
+            Image editor momento!
+            <ImageEditor/>
         </main>
     );
 }
