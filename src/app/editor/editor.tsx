@@ -7,6 +7,9 @@ import {ClimbingRoute, defaultRoute} from "@/app/editor/climbingRoute";
 import ImageEditor from "@/app/editor/imageEditor";
 import HoldEditor from "@/app/editor/holdEditor";
 import {Box} from "@mui/system";
+import CheecheeDraggable from "@/app/editor/cheecheeDraggable";
+import ImageWithOverlay from "@/app/editor/cheecheeDraggable";
+import DragWithOverlay from "@/app/editor/draggingPercentage";
 
 const myImage = "/resources/MOCK_rock_wall.jpg";
 
@@ -23,7 +26,8 @@ function RouteEditor() {
 
     return <>
         <Stack direction={"row"}>
-            <Box style={{maxWidth: "50%", backgroundColor: "red"}}>
+            {/*<DragWithOverlay/>*/}
+            <Box style={{maxWidth: "75%", backgroundColor: "red"}}>
                 <ImageEditor routeState={[route, setRoute]}/>
             </Box>
             <HoldEditor routeState={[route, setRoute]}/>

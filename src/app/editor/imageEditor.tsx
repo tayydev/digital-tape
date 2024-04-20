@@ -3,19 +3,60 @@ import Draggable from "react-draggable";
 import React, { useRef, useEffect, useState } from 'react';
 import {ClimbingRoute, HoldData} from "@/app/editor/climbingRoute";
 import { v4 as uuidv4 } from 'uuid';
+import {AtRule} from "csstype";
+
+interface Size {
+    width: number;
+    height: number;
+}
+
+const useComponentSize = (): [React.RefObject<HTMLDivElement>, Size] => {
+    const ref = useRef<HTMLDivElement>(null);
+    const [size, setSize] = useState<Size>({ width: 0, height: 0 });
+
+    const handleResize = () => {
+        if (ref.current) {
+            setSize({
+                width: ref.current.offsetWidth,
+                height: ref.current.offsetHeight
+            });
+        }
+    };
+
+    useEffect(() => {
+        handleResize(); // Set initial size
+        window.addEventListener("resize", handleResize); // Adjust on window resize
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+    return [ref, size];
+};
+
 
 interface ImageEditorProps {
     routeState: [ClimbingRoute, (value: (((prevState: ClimbingRoute) => ClimbingRoute) | ClimbingRoute)) => void]
 }
 
 export default function ImageEditor(props: ImageEditorProps) {
-    const [route, setRoute] = props.routeState
+    const [route, setRoute] = props.routeState //climbing route state
+    const [ref, size] = useComponentSize() //image size state
 
     const handleStop = (id: string, data: { x: number; y: number }) => {
-        const hold = route.holds.filter(it => it.id == id)[0]
-        hold.x = data.x
-        hold.y = data.y
-        setRoute(route)
+        const parent = route.holds.filter(it => it.id == id)[0]
+        const child: HoldData = {
+            id: parent.id,
+            x: (data.x / size.width) * 100 + parent.x,
+            y: (data.y / size.height) * 100 + parent.y
+        }
+        setRoute(
+            {
+                ...route,
+                holds: [...route.holds.filter(it => it.id != id), child]
+            }
+        )
+        console.log(route.holds[0])
     };
 
     const createObject = () => {
@@ -37,18 +78,37 @@ export default function ImageEditor(props: ImageEditorProps) {
         saveAs(blob, `${route.name}.json`);
     };
 
+
+    useEffect(() => {
+        console.log("route update", route)
+    }, [route]);
+
     return (
         <div>
             <div style={{ position: 'relative', width: '100%', height: 'auto' }}>
-                <img src={route.image} alt={route.name} style={{width: '100%', height: 'auto' }} />
-                {route.holds.map((object) => (
+                <img
+                    ref={ref}
+                    src={route.image}
+                    alt={route.name}
+                    style={{width: '100%', height: 'auto' }}
+                />
+                {route.holds.map((hold: HoldData) => (
                     <Draggable
                         bounds={"parent"}
-                        key={object.id}
-                        defaultPosition={{ x: object.x, y: object.y }}
-                        onStop={(e, data) => handleStop(object.id, data)}
+                        key={hold.id}
+                        onStop={(e, data) => handleStop(hold.id, data)}
+                        position={{x: 0, y: 0}}
                     >
-                        <div style={{ position: 'absolute' }}>Object {object.id}</div>
+                        <div style={{
+                            position: "absolute",
+                            top: `${hold.y}%`,
+                            left: `${hold.x}%`,
+                            width: "50px",
+                            height: "50px",
+                            backgroundColor: "rgba(255, 255, 255, 0.5)", // Semi-transparent white box
+                            // transform: "translate(-50%, -50%)", //TODO: This is important; This centers the box at the 25% x and 25% position
+                        }}>
+                        </div>
                     </Draggable>
                 ))}
             </div>
