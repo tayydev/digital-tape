@@ -6,6 +6,7 @@ import Stack from "@mui/material/Stack";
 import {ClimbingRoute, defaultRoute} from "@/app/editor/climbingRoute";
 import ImageEditor from "@/app/editor/imageEditor";
 import HoldEditor from "@/app/editor/holdEditor";
+import {Box} from "@mui/system";
 
 const myImage = "/resources/MOCK_rock_wall.jpg";
 
@@ -22,7 +23,9 @@ function RouteEditor() {
 
     return <>
         <Stack direction={"row"}>
-            <ImageEditor routeState={[route, setRoute]}/>
+            <Box style={{maxWidth: "50%"}} color={"red"}>
+                <ImageEditor routeState={[route, setRoute]}/>
+            </Box>
             <HoldEditor routeState={[route, setRoute]}/>
         </Stack>
     </>
