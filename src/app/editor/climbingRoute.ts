@@ -1,6 +1,6 @@
 import {randomUUID, UUID} from "node:crypto";
 
-export interface Route {
+export interface ClimbingRoute {
     id: UUID
     name: string //route name
     image: string //image loc
@@ -24,7 +24,7 @@ export interface NaturalData {
     y2: number
 }
 
-export const exampleRoute: Route = {
+export const exampleRoute: ClimbingRoute = {
     id: randomUUID(),
     name: "Sunset Climb",
     image: "path/to/sunset_climb.jpg",
