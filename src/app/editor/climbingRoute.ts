@@ -1,7 +1,7 @@
-import {randomUUID, UUID} from "node:crypto";
+import {v4 as uuidv4} from "uuid";
 
 export interface ClimbingRoute {
-    id: UUID
+    id: string
     name: string //route name
     image: string //image loc
     color1: string
@@ -11,13 +11,13 @@ export interface ClimbingRoute {
 }
 
 export interface HoldData {
-    id: UUID
+    id: string
     x: number
     y: number
 }
 
 export interface NaturalData {
-    id: UUID
+    id: string
     x1: number
     y1: number
     x2: number
@@ -25,18 +25,28 @@ export interface NaturalData {
 }
 
 export const exampleRoute: ClimbingRoute = {
-    id: randomUUID(),
+    id: uuidv4(),
     name: "Sunset Climb",
     image: "path/to/sunset_climb.jpg",
     color1: "#FF5733",
     color2: "#C70039",
     holds: [
-        { id: randomUUID(), x: 15, y: 20 },
-        { id: randomUUID(), x: 30, y: 50 },
-        { id: randomUUID(), x: 45, y: 75 }
+        { id: uuidv4(), x: 15, y: 20 },
+        { id: uuidv4(), x: 30, y: 50 },
+        { id: uuidv4(), x: 45, y: 75 }
     ],
     naturals: [
-        { id: randomUUID(), x1: 60, y1: 100, x2: 65, y2: 105 },
-        { id: randomUUID(), x1: 70, y1: 110, x2: 75, y2: 115 }
+        { id: uuidv4(), x1: 60, y1: 100, x2: 65, y2: 105 },
+        { id: uuidv4(), x1: 70, y1: 110, x2: 75, y2: 115 }
     ]
+};
+
+export const defaultRoute: ClimbingRoute = {
+    id: uuidv4(),
+    name: "Untitled",
+    image: "/resources/MOCK_rock_wall.jpg",
+    color1: "#FF5733",
+    color2: "#C70039",
+    holds: [],
+    naturals: []
 };

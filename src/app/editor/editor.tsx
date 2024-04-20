@@ -1,8 +1,11 @@
 'use client'
 
 import React, { useState } from "react";
-import Draggable from "react-draggable";
-import { saveAs } from "file-saver";
+import Stack from "@mui/material/Stack";
+
+import {ClimbingRoute, defaultRoute} from "@/app/editor/climbingRoute";
+import ImageEditor from "@/app/editor/imageEditor";
+import HoldEditor from "@/app/editor/holdEditor";
 
 const myImage = "/resources/MOCK_rock_wall.jpg";
 
@@ -12,42 +15,17 @@ interface ObjectData {
     y: number;
 }
 
-function ImageEditor() {
-    const [objects, setObjects] = useState<ObjectData[]>([]);
-
-    const handleStop = (id: number, e: any, data: { x: number; y: number }) => {
-        setObjects(objects.map(object =>
-            object.id === id ? { ...object, x: data.x, y: data.y } : object
-        ));
-    };
-
-    const createObject = () => {
-        const id = objects[0] ? Math.max(...objects.map(object => object.id)) + 1 : 1;
-        const newObject = { id, x: 0, y: 0 };
-        setObjects([...objects, newObject]);
-    };
-
-    const saveObjects = () => {
-        const blob = new Blob([JSON.stringify(objects)], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, "objects.json");
-    };
-
-    return (
-        <div>
-            <img src={myImage} alt="A Rock Climbing Wall" style={{ position: 'relative' }} />
-            {objects.map((object) => (
-                <Draggable
-                    key={object.id}
-                    defaultPosition={{ x: object.x, y: object.y }}
-                    onStop={(e, data) => handleStop(object.id, e, data)}
-                >
-                    <div style={{ position: 'absolute' }}>Object {object.id}</div>
-                </Draggable>
-            ))}
-            <button onClick={createObject}>Create Object</button>
-            <button onClick={saveObjects}>Save Objects</button>
-        </div>
+function RouteEditor() {
+    const [route, setRoute]: [ClimbingRoute, (value: (((prevState: ClimbingRoute) => ClimbingRoute) | ClimbingRoute)) => void] = useState<ClimbingRoute>(
+        defaultRoute
     );
+
+    return <>
+        <Stack direction={"row"}>
+            <ImageEditor routeState={[route, setRoute]}/>
+            <HoldEditor routeState={[route, setRoute]}/>
+        </Stack>
+    </>
 }
 
-export default ImageEditor;
+export default RouteEditor;
