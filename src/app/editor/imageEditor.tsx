@@ -59,11 +59,11 @@ export default function ImageEditor(props: ImageEditorProps) {
         console.log(route.holds[0])
     };
 
-    const createObject = () => {
+    const createHold = () => {
         const newHold: HoldData = {
             id: uuidv4(),
-            x: 0,
-            y: 0
+            x: 50,  //These are percentages
+            y: 50
         }
         setRoute(
             {
@@ -118,7 +118,8 @@ export default function ImageEditor(props: ImageEditorProps) {
                     </Draggable>
                 ))}
             </div>
-            <button onClick={createObject}>Create Object</button>
+            <button onClick={createHold}>Create Hold</button>
+            {/* <button onClick={createNatural}>Create Natural</button> */}
             <button onClick={saveObjects}>Save Objects</button>
         </div>
     );
