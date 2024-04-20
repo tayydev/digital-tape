@@ -1,9 +1,10 @@
 import {saveAs} from "file-saver";
 import Draggable from "react-draggable";
 import React, { useRef, useEffect, useState } from 'react';
-import {ClimbingRoute, HoldData} from "@/app/editor/climbingRoute";
+import {ClimbingRoute, HoldData, NaturalData} from "@/app/editor/climbingRoute";
 import { v4 as uuidv4 } from 'uuid';
 import {AtRule} from "csstype";
+import { Button } from "@mui/material";
 
 interface Size {
     width: number;
@@ -56,14 +57,14 @@ export default function ImageEditor(props: ImageEditorProps) {
                 holds: [...route.holds.filter(it => it.id != id), child]
             }
         )
-        console.log(route.holds[0])
+        console.log(route.holds)
     };
 
-    const createHold = () => {
+    function createHold(x:number = 50, y: number = 50): HoldData { // these are percentages
         const newHold: HoldData = {
             id: uuidv4(),
-            x: 50,  //These are percentages
-            y: 50
+            x: x,
+            y: y,
         }
         setRoute(
             {
@@ -71,7 +72,28 @@ export default function ImageEditor(props: ImageEditorProps) {
                 holds: [...route.holds, newHold]
             }
         )
+        return newHold;
     };
+
+    function createNatural(){
+        // Create a natural hold which contains two holds with a line between them
+        const hold1id: HoldData = createHold(45, 50)
+        const hold2id: HoldData = createHold(55, 50)
+
+        const newNatural: NaturalData = {
+            id: uuidv4(),
+            hold1id: hold1id.id,
+            hold2id: hold2id.id,
+        }
+
+        setRoute(
+            {
+                ...route,
+                holds: [...route.holds, hold1id, hold2id],
+                naturals: [...route.naturals, newNatural]
+            }
+        )
+    }
 
     const saveObjects = () => {
         const blob = new Blob([JSON.stringify(route)], {type: "text/plain;charset=utf-8"});
@@ -118,9 +140,9 @@ export default function ImageEditor(props: ImageEditorProps) {
                     </Draggable>
                 ))}
             </div>
-            <button onClick={createHold}>Create Hold</button>
-            {/* <button onClick={createNatural}>Create Natural</button> */}
-            <button onClick={saveObjects}>Save Objects</button>
+            <Button onClick={() => createHold()}>Create Hold</Button>
+            <Button onClick={createNatural}>Create Natural</Button>
+            <Button onClick={saveObjects}>Save Objects</Button>
         </div>
     );
 }
