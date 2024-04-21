@@ -4,7 +4,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import {ClimbingRoute, HoldData, NaturalData} from "@/app/editor/climbingRoute";
 import { v4 as uuidv4 } from 'uuid';
 import {AtRule} from "csstype";
-import { Button } from "@mui/material";
+import { Button, colors } from "@mui/material";
 import { lightenHexColor, selectColor } from "../theme";
 
 interface Size {
@@ -87,9 +87,9 @@ export default function ImageEditor(props: ImageEditorProps) {
             return selectColor;
         }
         if (highlighted === id) {
-            return lightenHexColor(route.color1, 0.2);
+            return "url(#lightCautionPattern)";
         }
-        return "rgba(255, 255, 255, 0.5)";
+        return "url(#cautionPattern)";
     }
 
     function createNatural(){
@@ -129,12 +129,24 @@ export default function ImageEditor(props: ImageEditorProps) {
 
     return (
         <div>
+            <svg style={{ position: 'absolute', width: 0, height: 0 }}>
+            <defs>
+                <pattern id="cautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
+                    <rect width="10" height="20" fill={route.color1}/>
+                    <rect x="10" width="10" height="20" fill={route.color2 ? route.color2 : route.color1}/>
+                </pattern>
+                <pattern id="lightCautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
+                    <rect width="10" height="20" fill={lightenHexColor(route.color1, 0.2)}/>
+                    <rect x="10" width="10" height="20" fill={route.color2 ? lightenHexColor(route.color2, 0.2) : lightenHexColor(route.color1, 0.2)}/>
+                </pattern>
+            </defs>
+        </svg>
             <div style={{ position: 'relative', width: '100%', height: 'auto' }}>
                 <img
                     ref={ref}
                     src={route.image}
                     alt={route.name}
-                    style={{width: '100%', height: 'auto' }}
+                    style={{width: '100%', height: 'auto'}}
                 />
                 {route.holds.map((hold: HoldData) => (
                     <Draggable
@@ -153,16 +165,19 @@ export default function ImageEditor(props: ImageEditorProps) {
                              onMouseEnter = {() => setHighlighted(hold.id)}
                              onMouseLeave = {() => setHighlighted(null)}
                         >
-                            <div style={{
+                            <svg width="50" height="50" style={{transform: "translate(-50%, -50%)"}}>
+                                <circle cx="25" cy="25" r="25" fill={determineHoldColor(hold.id)} />
+                            </svg>
+                            {/* <div style={{
                                 position: "relative",
                                 width: "50px",
                                 height: "50px",
                                 backgroundColor: determineHoldColor(hold.id),
+                                borderRadius: "50%",
                                 transform: "translate(-50%, -50%)", // This centers the box at the hold.x% and hold.y% position
                             }}
-                                 onClick = {() => setSelected(hold.id)}
                             >
-                            </div>
+                            </div> */}
                         </div>
                     </Draggable>
                 ))}
@@ -172,13 +187,21 @@ export default function ImageEditor(props: ImageEditorProps) {
 
                     return (
                         <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none'}}>
+                            {/* <defs>
+                                <pattern id="cautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
+                                    <rect width="10" height="20" fill={route.color1}/>
+                                    <rect x="10" width="10" height="20" fill={route.color2 ? route.color2 : route.color1}/>
+                                </pattern>
+                            </defs> */}
                             <line
                                 x1={`${hold1.x}%`}
                                 y1={`${hold1.y}%`}
                                 x2={`${hold2.x}%`}
                                 y2={`${hold2.y}%`}
-                                stroke="black"
+                                stroke="url(#cautionPattern)"
+                                strokeWidth=".5rem"
                             />
+                            
                         </svg>
                     );
                 })}
