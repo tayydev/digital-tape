@@ -51,7 +51,7 @@ return (
                             x2={`${hold2.x}%`}
                             y2={`${hold2.y}%`}
                             stroke="url(#cautionPattern)"
-                            strokeWidth=".5rem"
+                            strokeWidth="1vw"
                         />
                     </svg>
                 );

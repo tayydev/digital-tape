@@ -132,7 +132,7 @@ export default function ImageEditor(props: ImageEditorProps) {
                                 x2={`${hold2.x}%`}
                                 y2={`${hold2.y}%`}
                                 stroke="url(#cautionPattern)"
-                                strokeWidth=".5rem"
+                                strokeWidth="1vw"
                             />
                         </svg>
                     );
@@ -175,7 +175,7 @@ function HoldNode(props: HoldNodeProps) {
                         r="2vw"
                         fill={props.isHighlighted ? "url(#lightCautionPattern)" : "url(#cautionPattern)"}
                         stroke={props.isSelected ? selectColor : "none"}
-                        strokeWidth={"0.25rem"}
+                        strokeWidth={"0.25vw"}
                     />
                 </svg>
             </div>
