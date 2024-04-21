@@ -47,7 +47,6 @@ export default function ImageEditor(props: ImageEditorProps) {
     const [highlighted, setHighlighted] = props.highlightedState
     const [selected, setSelected] = props.selectedState
     const [ref, size] = useComponentSize() //image size state
-    const [isDragging, setIsDragging] = useState(false);
 
     const handleStop = (id: string, data: { x: number; y: number }) => {
         const parent = route.holds.filter(it => it.id == id)[0]
@@ -83,11 +82,11 @@ export default function ImageEditor(props: ImageEditorProps) {
     function determineHoldColor(id: string): string {
         if (selected === id) {
             return route.color2;
-        } else if (highlighted === id) {
-            return route.color1;
-        } else {
-            return "rgba(255, 255, 255, 0.5)";
         }
+        if (highlighted === id) {
+            return route.color1;
+        }
+        return "rgba(255, 255, 255, 0.5)";
     }
 
     function createNatural(){
@@ -138,11 +137,7 @@ export default function ImageEditor(props: ImageEditorProps) {
                     <Draggable
                         bounds={"parent"}
                         key={hold.id}
-                        onStart={() => setIsDragging(true)}
-                        onStop={(e, data) => {
-                            setTimeout(() => setIsDragging(false), 0);  // This is a hack to prevent the click event from firing after dragging
-                            handleStop(hold.id, data)
-                        }}
+                        onStop={(e, data) => handleStop(hold.id, data)}
                         position={{x: 0, y: 0}}
                     >
                         <div style={{
@@ -154,11 +149,7 @@ export default function ImageEditor(props: ImageEditorProps) {
                         }}     
                         onMouseEnter = {() => setHighlighted(hold.id)}
                         onMouseLeave = {() => setHighlighted(null)}
-                        onClick = {() => {
-                            if(!isDragging){
-                                setSelected(selected === hold.id ? null : hold.id)
-                            }
-                        }}
+                        onClick = {() => {setSelected(hold.id)}}
                         >
                             <div style={{
                                 position: "relative",
