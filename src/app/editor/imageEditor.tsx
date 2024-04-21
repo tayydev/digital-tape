@@ -1,10 +1,6 @@
-import {saveAs} from "file-saver";
 import Draggable from "react-draggable";
 import React, {useRef, useEffect, useState, LegacyRef} from 'react';
 import {ClimbingRoute, HoldData, NaturalData} from "@/app/editor/climbingRoute";
-import { v4 as uuidv4 } from 'uuid';
-import {AtRule} from "csstype";
-import { Button, colors } from "@mui/material";
 import { lightenHexColor, selectColor } from "../theme";
 
 interface Size {
@@ -51,25 +47,19 @@ export default function ImageEditor(props: ImageEditorProps) {
     const [possibleIds, setPossibleIds] = useState<string[]>([])
 
     useEffect(() => {
-        console.log("selected", selected)
         const truth = selected != null
-        console.log("is not null", truth)
         if(selected != null) {
-            console.log("got in")
             const parent = route.naturals.filter(nat => nat.id == selected)
             if(parent.length > 0) {
                 setPossibleIds([parent[0].hold1id, parent[0].id, parent[0].hold2id])
-                console.log("sett", possibleIds)
             }
             else {
                 setPossibleIds([selected])
             }
         }
         else {
-            console.log("fuck you")
             setPossibleIds([selected ?? "help"])
         }
-        console.log("pos", possibleIds)
     }, [route, selected]);
 
     const handleStop = (id: string, data: { x: number; y: number }) => {
@@ -79,7 +69,6 @@ export default function ImageEditor(props: ImageEditorProps) {
                 ? route.naturals.filter(nat => nat.hold1id == id || nat.hold2id == id)[0].id
                 : id
         )
-        console.log("handle stop select", selected, id, allChildren)
 
         const parent = route.holds.filter(it => it.id == id)[0]
         const child: HoldData = {
@@ -93,12 +82,7 @@ export default function ImageEditor(props: ImageEditorProps) {
                 holds: [...route.holds.filter(it => it.id != id), child]
             }
         )
-        console.log(route.holds)
     };
-
-    useEffect(() => {
-        console.log("route update", route)
-    }, [route]);
 
     return (
         <div>
