@@ -1,7 +1,6 @@
 import Draggable from "react-draggable";
 import React, {useRef, useEffect, useState, LegacyRef} from 'react';
 import { lightenHexColor, selectColor } from "../theme";
-import { hexToRgb } from "@mui/material";
 import {ClimbingRoute, HoldData, NaturalData} from "./climbingRoute";
 
 interface Size {
