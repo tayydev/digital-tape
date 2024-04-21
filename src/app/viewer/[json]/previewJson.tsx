@@ -1,12 +1,12 @@
 "use client"
 
 import {ClimbingRoute} from "../../editor/climbingRoute";
-import {Typography} from "@mui/material";
+import RouteImageViewer from "../routeImageViewer";
 
 interface RenderPreviewProps {
     json: ClimbingRoute
 }
 
 export default function JsonPreview(props: RenderPreviewProps) {
-    return <Typography>{props.json.name}</Typography>
+    return <RouteImageViewer climbingRoute={props.json}/>
 }
