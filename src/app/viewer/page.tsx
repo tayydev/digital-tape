@@ -1,9 +1,18 @@
-import HoldViewer from "@/app/viewer/viewer";
+import RouteViewer from "./viewer";
+import path from "path";
+import fs from "fs";
 
-export default function Page() {
+export default async function Page() {
+    const directories = await readDirectories()
+
     return (
         <main>
-            <HoldViewer/>
+            <RouteViewer fileNames={directories}/>
         </main>
     );
+}
+
+async function readDirectories() {
+    const dir = path.join(process.cwd(), 'public/json')
+    return fs.readdirSync(dir)
 }

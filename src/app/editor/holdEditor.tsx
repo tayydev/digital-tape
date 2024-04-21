@@ -19,11 +19,20 @@ import {v4 as uuidv4} from "uuid";
 import {saveAs} from "file-saver";
 import {Dropdown} from "@mui/base";
 import {HexColorPicker} from "react-colorful";
+import {GetStaticProps} from "next";
+
+
+// export async function getArticles(fs: any): Promise<string[]> {
+//     const dir = path.join(process.cwd(), 'public/img')
+//     const posts = fs.readdirSync(dir)
+//     return
+// }
 
 interface HoldEditorProps {
     routeState: [ClimbingRoute, (value: (((prevState: ClimbingRoute) => ClimbingRoute) | ClimbingRoute)) => void]
     highlightedState: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void]
     selectedState: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void]
+    imageNames: string[]
 }
 
 // Create a dark theme instance for a specific component.
@@ -41,6 +50,8 @@ export default function HoldEditor(props: HoldEditorProps) {
     const [selected, setSelected] = props.selectedState
     //we want to take our holds and naturals and make a list of effective hold ids
     const [unownedHolds, setUnownedHolds] = useState<HoldData[]>([])
+
+    console.log("image names", props.imageNames)
 
     useEffect(() => {
         const naturalOwnedIds = route.naturals.flatMap(it => [it.hold1id, it.hold2id])
@@ -68,6 +79,9 @@ export default function HoldEditor(props: HoldEditorProps) {
                 holds: [...route.holds, newHold]
             }
         )
+        setSelected(
+            newHold.id
+        )
         return newHold;
     };
 
@@ -91,8 +105,12 @@ export default function HoldEditor(props: HoldEditorProps) {
             {
                 ...route,
                 holds: [...route.holds, hold1id, hold2id],
-                naturals: [...route.naturals, newNatural]
+                naturals: [...route.naturals, newNatural],
             }
+        )
+
+        setSelected(
+            newNatural.id
         )
     }
 
@@ -100,6 +118,25 @@ export default function HoldEditor(props: HoldEditorProps) {
     return <Stack spacing={1} padding={'1rem'} style={{width: "100%"}}>
         <Box/>
         <ThemeProvider theme={darkTheme}>
+            <FormControl>
+                <InputLabel id="demo-simple-select-img">Wall</InputLabel>
+                <Select
+                    value={route.grade}
+                    labelId="demo-simple-select-img"
+                    label="Wall"
+                    onChange={(event) => {
+                        setRoute({
+                            ...route,
+                            image: event.target.value
+                        })
+                    }}
+                >
+                    {/*{imgs.map(grade =>*/}
+                    {/*    <MenuItem value={grade}>{grade}</MenuItem>*/}
+                    {/*)}*/}
+                </Select>
+
+            </FormControl>
             <TextField
                 label={"Route Name"}
                 variant={"outlined"}
@@ -111,7 +148,7 @@ export default function HoldEditor(props: HoldEditorProps) {
                     })
                 }}
             />
-            <Box/>
+            {/*<Box/>*/}
             <Stack direction={"row"} spacing={1}>
                 <TextField
                     style={{width: "50%"}}
@@ -146,7 +183,7 @@ export default function HoldEditor(props: HoldEditorProps) {
                 </FormControl>
             </Stack>
         </ThemeProvider>
-        <Box/>
+        {/*<Box/>*/}
         <Stack direction={"row"} spacing={2} height={"12rem"}>
             <HexColorPicker
                 style={{height: "100%", width: "50%"}}

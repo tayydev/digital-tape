@@ -4,10 +4,16 @@ import { useEffect, useState } from 'react';
 import RouteImageViewer from './routeImageViewer';
 import { HoldData, NaturalData } from '../editor/climbingRoute';
 
-export default function RouteViewer() {
+interface RouteViewerProps {
+    fileNames: string[]
+}
+
+export default function RouteViewer(props: RouteViewerProps) {
     const [files, setFiles] = useState<{name: string}[]>([]);
     const [selectedFile, setSelectedFile] = useState<any | null>(null);
     const [open, setOpen] = useState(false);
+
+    console.log("got dirs", props.fileNames)
 
     useEffect(() => {
         const fileNames = ['example.json', 'example2.json'];

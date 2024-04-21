@@ -26,7 +26,11 @@ export const useConfirmOnPageExit = (message: string) => {
 };
 
 
-function RouteEditor() {
+interface RouteEditorProps {
+    images: string[]
+}
+
+function RouteEditor(props: RouteEditorProps) {
     //TODO: Re-enable in production app
     // useConfirmOnPageExit("You have unsaved changes. Are you sure you want to leave?", true);
 
@@ -51,6 +55,7 @@ function RouteEditor() {
                     routeState={[route, setRoute]}
                     highlightedState={[highlightedHold, setHighlightedHold]}
                     selectedState={[selectedHold, setSelectedHold]}
+                    imageNames={props.images}
                 />
             </Box>
         </Stack>
