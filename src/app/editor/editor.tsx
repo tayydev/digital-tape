@@ -52,6 +52,7 @@ const useMobileDetectByWidth = () => {
 
 interface RouteEditorProps {
     images: string[]
+    starterRoute: ClimbingRoute
 }
 
 function RouteEditor(props: RouteEditorProps) {
@@ -59,7 +60,7 @@ function RouteEditor(props: RouteEditorProps) {
     // useConfirmOnPageExit("You have unsaved changes. Are you sure you want to leave?", true);
 
     const [route, setRoute]: [ClimbingRoute, (value: (((prevState: ClimbingRoute) => ClimbingRoute) | ClimbingRoute)) => void] = useState<ClimbingRoute>(
-        defaultRoute
+        props.starterRoute
     );
 
     const [highlightedHold, setHighlightedHold]: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void] = useState<string|null>(null)
