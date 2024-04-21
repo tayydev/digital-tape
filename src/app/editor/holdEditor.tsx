@@ -60,7 +60,8 @@ export default function HoldEditor(props: HoldEditorProps) {
 
     function saveObjects() {
         const blob = new Blob([JSON.stringify(route)], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, `${route.name}.json`);
+        const fileName = route.name.replace(/ /g, '_');
+        saveAs(blob, `${fileName}.json`);
     };
 
     function createHold(x:number = 50, y: number = 50): HoldData { // these are percentages
