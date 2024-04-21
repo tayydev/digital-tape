@@ -5,7 +5,7 @@ import {Box} from "@mui/system";
 import {
     Button, Checkbox,
     createTheme,
-    FormControl,
+    FormControl, IconButton,
     InputLabel,
     MenuItem,
     Select,
@@ -271,16 +271,27 @@ export default function HoldEditor(props: HoldEditorProps) {
                     onSelect={() => setSelected(hold.id)}
                     isHovered={hold.id == highlighted}
                     isSelected={hold.id == selected}
+                    onDelete={() => setRoute({
+                        ...route,
+                        holds: route.holds.filter(it => it.id != hold.id)
+                    })}
+                    description={"Hold"}
                 />
             )}
             {route.naturals.toSorted((a, b) => a.id.localeCompare(b.id)).map(hold =>
-                <NaturalHoldProps
+                <SingleHold
                     name={hold.id.substring(0, 4)}
                     onHover={() => setHighlighted(hold.id)}
                     onHoverEnd={() => setHighlighted(null)}
                     onSelect={() => setSelected(hold.id)}
                     isHovered={hold.id == highlighted}
                     isSelected={hold.id == selected}
+                    onDelete={() => setRoute({
+                        ...route,
+                        holds: route.holds.filter(it => ![hold.hold1id, hold.hold2id].includes(it.id)),
+                        naturals: route.naturals.filter(it => it.id != hold.id)
+                    })}
+                    description={"Natural Hold"}
                 />
             )}
         </Stack>
@@ -293,7 +304,9 @@ interface SingleHoldProps {
     onHoverEnd: () => void,
     onSelect: () => void,
     isHovered: boolean,
-    isSelected: boolean
+    isSelected: boolean,
+    onDelete: () => void,
+    description: string
 }
 
 function SingleHold(props: SingleHoldProps) {
@@ -309,37 +322,17 @@ function SingleHold(props: SingleHoldProps) {
              onClick={() => props.onSelect()}
         >
             <Stack direction={"row"} alignItems={"center"} padding={"0.5rem"}>
-                <Typography fontWeight={"bold"}>Hold </Typography>
+                <Typography fontWeight={"bold"}>{props.description} </Typography>
                 <Typography marginLeft={"0.5rem"} fontWeight={"bold"} color={"lightgrey"}>({props.name})</Typography>
-                <Button
-                    variant="text"
-                    startIcon={
-                        <Stack direction={"row"} justifyContent={"center"} style={{width: "100%"}}>
-                            <DeleteOutline style={{margin: "0.5rem"}}/>
-                        </Stack>
-                    }
+                <IconButton
+                    size="small"
                     style={{ marginLeft: "auto", color: "red", minWidth: "0"}}
-                />
-            </Stack>
-        </Box>
-    </>
-}
-
-function NaturalHoldProps(props: SingleHoldProps) {
-    return <>
-        <Box style={{
-            backgroundColor: props.isSelected ? (props.isHovered ? lightenHexColor(selectColor, 0.3) : selectColor) : (props.isHovered ? lightenHexColor(offBlack, 0.3) : offBlack),
-            borderRadius: "10px",
-            minHeight: "2.5rem",
-            width: "100%"
-        }}
-             onMouseEnter={() => props.onHover()}
-             onMouseLeave={() => props.onHoverEnd()}
-             onClick={() => props.onSelect()}
-        >
-            <Stack direction={"row"} alignItems={"center"} padding={"0.5rem"}>
-                <Typography fontWeight={"bold"}>Natural Hold </Typography>
-                <Typography marginLeft={"auto"} fontWeight={"bold"}>{props.name}</Typography>
+                    onClick={() => {
+                        props.onDelete()
+                    }}
+                >
+                    <DeleteOutline/>
+                </IconButton>
             </Stack>
         </Box>
     </>
