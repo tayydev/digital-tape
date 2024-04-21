@@ -1,16 +1,9 @@
 import { LegacyRef, useRef } from "react";
-import { HoldData, NaturalData } from "../editor/climbingRoute";
-import { lightenHexColor, selectColor } from "../theme";
+import { ClimbingRoute, HoldData, NaturalData } from "../editor/climbingRoute";
+import { lightenHexColor } from "../theme";
 
 interface RouteViewerProps {
-    color1: string
-    color2: string
-    image: string
-    name: string
-    grade: string
-    setter: string
-    holds: HoldData[]
-    naturals: NaturalData[]
+    climbingRoute: ClimbingRoute
 }
 
 export default function RouteImageViewer(props: RouteViewerProps) {
@@ -21,28 +14,28 @@ return (
         <svg style={{ position: 'absolute', width: 0, height: 0 }}>
         <defs>
             <pattern id="cautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
-                <rect width="10" height="20" fill={props.color1}/>
-                <rect x="10" width="10" height="20" fill={props.color2 ? props.color2 : props.color1}/>
+                <rect width="10" height="20" fill={props.climbingRoute.color1}/>
+                <rect x="10" width="10" height="20" fill={props.climbingRoute.color2 ? props.climbingRoute.color2 : props.climbingRoute.color1}/>
             </pattern>
             <pattern id="lightCautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
-                <rect width="10" height="20" fill={lightenHexColor(props.color1, 0.2)}/>
-                <rect x="10" width="10" height="20" fill={props.color2 ? lightenHexColor(props.color2, 0.2) : lightenHexColor(props.color1, 0.2)}/>
+                <rect width="10" height="20" fill={lightenHexColor(props.climbingRoute.color1, 0.2)}/>
+                <rect x="10" width="10" height="20" fill={props.climbingRoute.color2 ? lightenHexColor(props.climbingRoute.color2, 0.2) : lightenHexColor(props.climbingRoute.color1, 0.2)}/>
             </pattern>
         </defs>
     </svg>
         <div style={{ position: 'relative', width: '100%', height: 'auto'}}>
             <img
                 ref={ref as LegacyRef<HTMLImageElement>}
-                src={props.image}
-                alt={props.name}
+                src={props.climbingRoute.image}
+                alt={props.climbingRoute.name}
                 style={{width: '100%', height: 'auto'}}
             />
-            {props.holds.map((hold: HoldData) => (
+            {props.climbingRoute.holds.map((hold: HoldData) => (
                 <HoldNode hold={hold} key={hold.id} />
             ))}
-            {props.naturals.map((natural: NaturalData) => {
-                const hold1 = props.holds.find(hold => hold.id === natural.hold1id)!;
-                const hold2 = props.holds.find(hold => hold.id === natural.hold2id)!;
+            {props.climbingRoute.naturals.map((natural: NaturalData) => {
+                const hold1 = props.climbingRoute.holds.find(hold => hold.id === natural.hold1id)!;
+                const hold2 = props.climbingRoute.holds.find(hold => hold.id === natural.hold2id)!;
 
                 return (
                     <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none'}}>
