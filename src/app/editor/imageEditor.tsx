@@ -5,6 +5,7 @@ import {ClimbingRoute, HoldData, NaturalData} from "@/app/editor/climbingRoute";
 import { v4 as uuidv4 } from 'uuid';
 import {AtRule} from "csstype";
 import { Button } from "@mui/material";
+import { lightenHexColor, selectColor } from "../theme";
 
 interface Size {
     width: number;
@@ -81,10 +82,10 @@ export default function ImageEditor(props: ImageEditorProps) {
 
     function determineHoldColor(id: string): string {
         if (selected === id) {
-            return route.color2;
+            return selectColor;
         }
         if (highlighted === id) {
-            return route.color1;
+            return lightenHexColor(route.color1, 0.2);
         }
         return "rgba(255, 255, 255, 0.5)";
     }
@@ -149,7 +150,7 @@ export default function ImageEditor(props: ImageEditorProps) {
                         }}     
                         onMouseEnter = {() => setHighlighted(hold.id)}
                         onMouseLeave = {() => setHighlighted(null)}
-                        onClick = {() => {setSelected(hold.id)}}
+                        onClick = {() => setSelected(hold.id)}
                         >
                             <div style={{
                                 position: "relative",
