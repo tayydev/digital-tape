@@ -4,7 +4,7 @@ const ImageWithOverlay: React.FC = () => {
     return (
         <div style={{ position: "relative", width: "100%" }}>
             <img
-                src="/resources/MOCK_rock_wall.jpg" // Replace with your desired image URL
+                src="/img/MOCK_rock_wall.jpg" // Replace with your desired image URL
                 style={{ width: "100%", height: "auto" }}
                 alt="Responsive"
             />
