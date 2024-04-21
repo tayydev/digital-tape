@@ -26,6 +26,7 @@
     "react-draggable": "^4.4.6",
     "styled-components": "^6.1.8",
     "uuid": "^9.0.1",
+    "webpack": "^5.91.0",
     "yarn": "^1.22.22"
   },
   "devDependencies": {
