@@ -1,9 +1,12 @@
-import {ClimbingRoute, HoldData} from "@/app/editor/climbingRoute";
+import {ClimbingRoute, HoldData, NaturalData} from "@/app/editor/climbingRoute";
 import Stack from "@mui/material/Stack";
 import {useEffect, useState} from "react";
 import {Box} from "@mui/system";
-import {TextField, Typography} from "@mui/material";
+import {Button, Typography} from "@mui/material";
 import {lightenHexColor, offBlack, selectColor} from "@/app/theme";
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import {v4 as uuidv4} from "uuid";
+import {saveAs} from "file-saver";
 
 interface HoldEditorProps {
     routeState: [ClimbingRoute, (value: (((prevState: ClimbingRoute) => ClimbingRoute) | ClimbingRoute)) => void]
@@ -24,7 +27,76 @@ export default function HoldEditor(props: HoldEditorProps) {
         setUnownedHolds(unowned)
     }, [route]);
 
+    function saveObjects() {
+        const blob = new Blob([JSON.stringify(route)], {type: "text/plain;charset=utf-8"});
+        saveAs(blob, `${route.name}.json`);
+    };
+
+    function createHold(x:number = 50, y: number = 50): HoldData { // these are percentages
+        const newHold: HoldData = {
+            id: uuidv4(),
+            x: x,
+            y: y,
+        }
+        setRoute(
+            {
+                ...route,
+                holds: [...route.holds, newHold]
+            }
+        )
+        return newHold;
+    };
+
+    function createNatural(){
+        // Create a natural hold which contains two holds with a line between them
+        const hold1id: HoldData = createHold(45, 50)
+        const hold2id: HoldData = createHold(55, 50)
+
+        const newNatural: NaturalData = {
+            id: uuidv4(),
+            hold1id: hold1id.id,
+            hold2id: hold2id.id,
+        }
+
+        setRoute(
+            // both holds and naturals are arrays, so we need to spread the existing
+            // arrays and add the new hold and natural
+
+            // because of the way state works in react, even though we call setRoute 3 times,
+            // it only updates during the last call
+            {
+                ...route,
+                holds: [...route.holds, hold1id, hold2id],
+                naturals: [...route.naturals, newNatural]
+            }
+        )
+    }
+
+
     return <Stack spacing={1} padding={'1rem'} style={{width: "100%"}}>
+        <Stack direction={"row"} spacing={1} height={"2.5rem"}>
+            <Button
+                onClick={() => createHold()}
+                variant="contained" style={{fontWeight: "bold", borderRadius: "10px", width: "33%"}}>
+                <Stack direction={"row"} spacing={0.5}>
+                    <AddCircleIcon/>
+                    <Typography fontWeight={"bold"}>Hold</Typography>
+                </Stack>
+            </Button>
+            <Button
+                onClick={() => createNatural()}
+                variant="contained" style={{fontWeight: "bold", borderRadius: "10px", width: "33%"}}>
+                <Stack direction={"row"} spacing={0.5}>
+                    <AddCircleIcon/>
+                    <Typography fontWeight={"bold"}>Natural</Typography>
+                </Stack>
+            </Button>
+            <Button
+                onClick={() => saveObjects()}
+                variant="contained" style={{fontWeight: "bold", borderRadius: "10px", width: "33%"}}>
+                <Typography fontWeight={"bold"}>Export</Typography>
+            </Button>
+        </Stack>
         {unownedHolds.toSorted((a, b) => a.id.localeCompare(b.id)).map(hold =>
             <SingleHold
                 name={hold.id.substring(0, 4)}

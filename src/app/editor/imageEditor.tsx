@@ -1,6 +1,6 @@
 import {saveAs} from "file-saver";
 import Draggable from "react-draggable";
-import React, { useRef, useEffect, useState } from 'react';
+import React, {useRef, useEffect, useState, LegacyRef} from 'react';
 import {ClimbingRoute, HoldData, NaturalData} from "@/app/editor/climbingRoute";
 import { v4 as uuidv4 } from 'uuid';
 import {AtRule} from "csstype";
@@ -67,50 +67,6 @@ export default function ImageEditor(props: ImageEditorProps) {
         console.log(route.holds)
     };
 
-    function createHold(x:number = 50, y: number = 50): HoldData { // these are percentages
-        const newHold: HoldData = {
-            id: uuidv4(),
-            x: x,
-            y: y,
-        }
-        setRoute(
-            {
-                ...route,
-                holds: [...route.holds, newHold]
-            }
-        )
-        return newHold;
-    };
-
-    function createNatural(){
-        // Create a natural hold which contains two holds with a line between them
-        const hold1id: HoldData = createHold(45, 50)
-        const hold2id: HoldData = createHold(55, 50)
-
-        const newNatural: NaturalData = {
-            id: uuidv4(),
-            hold1id: hold1id.id,
-            hold2id: hold2id.id,
-        }
-
-        setRoute(
-            // both holds and naturals are arrays, so we need to spread the existing
-            // arrays and add the new hold and natural
-
-            // because of the way state works in react, even though we call setRoute 3 times, 
-            // it only updates during the last call
-            {
-                ...route,
-                holds: [...route.holds, hold1id, hold2id],
-                naturals: [...route.naturals, newNatural]
-            }
-        )
-    }
-
-    const saveObjects = () => {
-        const blob = new Blob([JSON.stringify(route)], {type: "text/plain;charset=utf-8"});
-        saveAs(blob, `${route.name}.json`);
-    };
 
     function selectedHandler(id: string): string{
         if (selected === id){
@@ -145,7 +101,7 @@ export default function ImageEditor(props: ImageEditorProps) {
         </svg>
             <div style={{ position: 'relative', width: '100%', height: 'auto'}}>
                 <img
-                    ref={ref}
+                    ref={ref as LegacyRef<HTMLImageElement>}
                     src={route.image}
                     alt={route.name}
                     style={{width: '100%', height: 'auto'}}
@@ -198,9 +154,6 @@ export default function ImageEditor(props: ImageEditorProps) {
                     );
                 })}
             </div>
-            <Button onClick={() => createHold()}>Create Hold</Button>
-            <Button onClick={createNatural}>Create Natural</Button>
-            <Button onClick={saveObjects}>Save Objects</Button>
         </div>
     );
 }

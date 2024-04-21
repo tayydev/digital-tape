@@ -1,25 +1,35 @@
 'use client'
 
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import Stack from "@mui/material/Stack";
 
 import {ClimbingRoute, defaultRoute} from "@/app/editor/climbingRoute";
 import ImageEditor from "@/app/editor/imageEditor";
 import HoldEditor from "@/app/editor/holdEditor";
 import {Box} from "@mui/system";
-import CheecheeDraggable from "@/app/editor/cheecheeDraggable";
-import ImageWithOverlay from "@/app/editor/cheecheeDraggable";
-import DragWithOverlay from "@/app/editor/draggingPercentage";
 
-const myImage = "/resources/MOCK_rock_wall.jpg";
+// This function sets up a confirmation dialog when the user attempts to leave the page.
+export const useConfirmOnPageExit = (message: string) => {
+    useEffect(() => {
+        const handleBeforeUnload = (event: BeforeUnloadEvent): string | void => {
+            event.returnValue = message;
+            return message;
+        };
 
-interface ObjectData {
-    id: number;
-    x: number;
-    y: number;
-}
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        // Cleanup function to remove the event listener when the component unmounts
+        return () => {
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, [message]); // Dependency on 'message' so it updates if message changes
+};
+
 
 function RouteEditor() {
+    //TODO: Re-enable in production app
+    // useConfirmOnPageExit("You have unsaved changes. Are you sure you want to leave?", true);
+
     const [route, setRoute]: [ClimbingRoute, (value: (((prevState: ClimbingRoute) => ClimbingRoute) | ClimbingRoute)) => void] = useState<ClimbingRoute>(
         defaultRoute
     );
@@ -29,14 +39,14 @@ function RouteEditor() {
 
     return <>
         <Stack direction={"row"}>
-            <Box style={{width: "75%", backgroundColor: "red"}}>
+            <Box style={{width: "65%"}} padding={"1rem"}>
                 <ImageEditor
                     routeState={[route, setRoute]}
                     highlightedState={[highlightedHold, setHighlightedHold]}
                     selectedState={[selectedHold, setSelectedHold]}
                 />
             </Box>
-            <Box style={{width: "25%"}}>
+            <Box style={{width: "35%"}}>
                 <HoldEditor
                     routeState={[route, setRoute]}
                     highlightedState={[highlightedHold, setHighlightedHold]}
