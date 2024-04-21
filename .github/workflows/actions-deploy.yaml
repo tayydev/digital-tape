@@ -30,10 +30,10 @@ jobs:
         run: npm run build
 
       - name: Create .nojekyll file
-        run: touch /.nojekyll
+        run: touch ./out/.nojekyll
 
       - name: Create CNAME file
-        run: echo "settr.pro" > ./CNAME # Change to your domain
+        run: echo "settr.pro" > ./out/CNAME # Change to your domain
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.5.0
