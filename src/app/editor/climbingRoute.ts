@@ -30,8 +30,8 @@ export const defaultRoute: ClimbingRoute = {
     grade: "5.5",
     setter: "",
     image: "/img/MOCK_rock_wall.jpg",
-    color1: "#FF5733",
-    color2: "#C70039",
+    color1: "#09e570",
+    color2: "",
     holds: [],
     naturals: []
 };

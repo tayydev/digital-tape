@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import React, {useEffect, useState} from "react";
 import {Box} from "@mui/system";
 import {
-    Button,
+    Button, Checkbox,
     createTheme,
     FormControl,
     InputLabel,
@@ -18,6 +18,7 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {v4 as uuidv4} from "uuid";
 import {saveAs} from "file-saver";
 import {Dropdown} from "@mui/base";
+import {HexColorPicker} from "react-colorful";
 
 interface HoldEditorProps {
     routeState: [ClimbingRoute, (value: (((prevState: ClimbingRoute) => ClimbingRoute) | ClimbingRoute)) => void]
@@ -145,6 +146,60 @@ export default function HoldEditor(props: HoldEditorProps) {
                 </FormControl>
             </Stack>
         </ThemeProvider>
+        <Box/>
+        <Stack direction={"row"} spacing={2} height={"12rem"}>
+            <HexColorPicker
+                style={{height: "100%", width: "50%"}}
+                color={route.color1}
+                onChange={(color) => {
+                    setRoute({
+                        ...route,
+                        color1: color
+                    })
+                }}
+            />
+            <Stack style={{width: "50%", padding: 0}}>
+                <Stack direction={"row"} justifyContent={"center"} alignItems={"center"}>
+                    <Typography>
+                        Secondary Color?
+                    </Typography>
+                    <ThemeProvider theme={darkTheme}>
+                        <Checkbox
+                            checked={route.color2 != ""}
+                            onChange={(event) => {
+                                setRoute({
+                                    ...route,
+                                    color2: event.target.checked ? "#d64242" : ""
+                                })
+                            }}
+                        />
+                    </ThemeProvider>
+                </Stack>
+                {route.color2 !== ""
+                    ? <HexColorPicker
+                        style={{height: "100%", width: "100%"}}
+                        color={route.color2}
+                        onChange={(color) => {
+                            setRoute({
+                                ...route,
+                                color2: color
+                            })
+                        }}
+                    />
+                    : <div style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "55%",
+                        // backgroundColor: "#e0e0e0"
+                    }}>
+                        <Typography variant="subtitle2" color={"darkgray"}>
+                            No Secondary Color
+                        </Typography>
+                    </div>
+                }
+            </Stack>
+        </Stack>
         <Box/>
         <Stack direction={"row"} spacing={1} height={"2.5rem"}>
             <Button
