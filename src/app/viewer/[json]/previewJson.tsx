@@ -1,7 +1,7 @@
 "use client"
 
 import {ClimbingRoute} from "../../editor/climbingRoute";
-import RouteImageViewer from "../routeImageViewer";
+import RouteImageViewer from "./routeImageViewer";
 
 interface RenderPreviewProps {
     json: ClimbingRoute

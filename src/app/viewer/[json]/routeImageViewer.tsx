@@ -1,6 +1,6 @@
 import { LegacyRef, useRef } from "react";
-import { ClimbingRoute, HoldData, NaturalData } from "../editor/climbingRoute";
-import { lightenHexColor } from "../theme";
+import { ClimbingRoute, HoldData, NaturalData } from "../../editor/climbingRoute";
+import { lightenHexColor } from "../../theme";
 
 interface RouteViewerProps {
     climbingRoute: ClimbingRoute
