@@ -163,14 +163,14 @@ function HoldNode(props: HoldNodeProps) {
                  onMouseEnter = {() => props.setHighlighted()}
                  onMouseLeave = {() => props.unHighlight()}
             >
-                <svg width="50" height="50" style={{transform: "translate(-50%, -50%)"}}>
+                <svg width="4rem" height="4rem" style={{transform: "translate(-50%, -50%)"}}>
                     <circle
-                        cx="25"
-                        cy="25"
-                        r="23"
+                        cx="2rem"
+                        cy="2rem"
+                        r="1.5rem"
                         fill={props.isHighlighted ? "url(#lightCautionPattern)" : "url(#cautionPattern)"}
                         stroke={props.isSelected ? selectColor : "none"}
-                        strokeWidth={"3"}
+                        strokeWidth={"0.25rem"}
                     />
                 </svg>
             </div>
