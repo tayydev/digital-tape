@@ -71,7 +71,9 @@ function RouteEditor(props: RouteEditorProps) {
         {isMobile
             ? <Typography align={"center"} padding={"1rem"}>The Editor is not supported on your display size</Typography>
             : <Stack direction={"row"}>
-                <Box style={{width: "65%", maxHeight: "90vh", backgroundColor: "red", overflow: "auto"}} padding={"1rem"}>
+                <Box style={{width: "65%", maxHeight: "90vh",
+                    // backgroundColor: "red",
+                    overflow: "auto"}} padding={"1rem"}>
                     <ImageEditor
                         routeState={[route, setRoute]}
                         highlightedState={[highlightedHold, setHighlightedHold]}
