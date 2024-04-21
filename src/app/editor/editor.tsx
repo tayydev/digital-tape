@@ -3,11 +3,11 @@
 import React, {useEffect, useState} from "react";
 import Stack from "@mui/material/Stack";
 
-import {ClimbingRoute, defaultRoute} from "@/app/editor/climbingRoute";
-import ImageEditor from "@/app/editor/imageEditor";
-import HoldEditor from "@/app/editor/holdEditor";
 import {Box} from "@mui/system";
 import {Typography} from "@mui/material";
+import {ClimbingRoute, defaultRoute} from "./climbingRoute";
+import ImageEditor from "./imageEditor";
+import HoldEditor from "./holdEditor";
 
 // This function sets up a confirmation dialog when the user attempts to leave the page.
 export const useConfirmOnPageExit = (message: string) => {
@@ -80,7 +80,7 @@ function RouteEditor(props: RouteEditorProps) {
                         selectedState={[selectedHold, setSelectedHold]}
                     />
                 </Box>
-                <Box style={{width: "35%"}}>
+                <Box style={{width: "35%", maxHeight: "90vh", overflow: "auto"}}>
                     <HoldEditor
                         routeState={[route, setRoute]}
                         highlightedState={[highlightedHold, setHighlightedHold]}

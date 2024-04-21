@@ -1,6 +1,5 @@
-import {ClimbingRoute, HoldData, NaturalData} from "@/app/editor/climbingRoute";
 import Stack from "@mui/material/Stack";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Box} from "@mui/system";
 import {
     Button, Checkbox,
@@ -13,7 +12,6 @@ import {
     ThemeProvider,
     Typography
 } from "@mui/material";
-import {lightenHexColor, offBlack, selectColor} from "@/app/theme";
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {v4 as uuidv4} from "uuid";
 import {saveAs} from "file-saver";
@@ -22,6 +20,7 @@ import {HexColorPicker} from "react-colorful";
 import {GetStaticProps} from "next";
 import DeleteIcon from '@mui/icons-material/Delete';
 import {DeleteOutline} from "@mui/icons-material";
+import {ClimbingRoute, HoldData, NaturalData} from "./climbingRoute";
 
 
 // export async function getArticles(fs: any): Promise<string[]> {
@@ -116,28 +115,66 @@ export default function HoldEditor(props: HoldEditorProps) {
 
     console.log("image", route.image)
 
+    const inputRef = useRef<HTMLInputElement>(null);
+    const handleButtonClick = () => {
+        // Simulate click on input element
+        inputRef.current?.click();
+    };
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files && files[0]) {
+            const file = files[0];
+            const reader = new FileReader();
+
+            reader.onload = (loadEvent: ProgressEvent<FileReader>) => {
+                if (loadEvent.target?.result) {
+                    const jsonData: ClimbingRoute = JSON.parse(loadEvent.target.result.toString());
+                    setRoute(jsonData);
+
+                }
+            };
+
+            reader.readAsText(file);
+        }
+    };
+
     return <Stack spacing={1} padding={'1rem'} style={{width: "100%"}}>
         <Box/>
+        <Stack direction={"row"} spacing={1}>
+            <ThemeProvider theme={darkTheme}>
+                <FormControl style={{width: "100%"}}>
+                    <InputLabel id="demo-simple-select-img">Wall</InputLabel>
+                    <Select
+                        value={route.image.substring(5)}
+                        labelId="demo-simple-select-img"
+                        label="Wall"
+                        onChange={(event) => {
+                            setRoute({
+                                ...route,
+                                image: `/img/${event.target.value}`
+                            })
+                        }}
+                    >
+                        {props.imageNames.map(img =>
+                            <MenuItem value={img}>{img}</MenuItem>
+                        )}
+                    </Select>
+                </FormControl>
+            </ThemeProvider>
+            <input
+                type="file"
+                style={{display: "none"}}
+                accept="application/json"
+                ref={inputRef}
+                onChange={handleFileChange}
+            />
+            <Button
+                onClick={handleButtonClick}
+                variant="contained" style={{fontWeight: "bold", borderRadius: "10px"}}>
+                <Typography fontWeight={"bold"}>Import</Typography>
+            </Button>
+        </Stack>
         <ThemeProvider theme={darkTheme}>
-            <FormControl>
-                <InputLabel id="demo-simple-select-img">Wall</InputLabel>
-                <Select
-                    value={route.image.substring(5)}
-                    labelId="demo-simple-select-img"
-                    label="Wall"
-                    onChange={(event) => {
-                        setRoute({
-                            ...route,
-                            image: `/img/${event.target.value}`
-                        })
-                    }}
-                >
-                    {props.imageNames.map(img =>
-                        <MenuItem value={img}>{img}</MenuItem>
-                    )}
-                </Select>
-
-            </FormControl>
             <TextField
                 label={"Route Name"}
                 variant={"outlined"}

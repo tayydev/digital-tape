@@ -1,11 +1,10 @@
 "use client"
 
 import { usePathname } from "next/navigation";
-import { lightenHexColor, selectColor } from "@/app/theme";
 import Stack from "@mui/material/Stack";
 import { Typography } from "@mui/material";
 import Link from "next/link";
-import {offBlack} from "./theme";
+import {lightenHexColor, offBlack, selectColor} from "./theme";
 
 export default function Navbar() {
     const pathname = usePathname();
@@ -19,7 +18,9 @@ export default function Navbar() {
     });
 
     return (
-        <nav style={{ background: lightenHexColor(selectColor, -0.3), padding: "1rem" }}>
+        <nav style={{ background: lightenHexColor(selectColor, -0.3), padding: "1rem",
+            maxHeight: "10vh"
+        }}>
             <Stack direction="row" justifyContent="center" spacing={2}>
                 <Link href="/">
                     <Typography variant="h6" style={linkStyle("/")}>
