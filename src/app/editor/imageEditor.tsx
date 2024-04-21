@@ -8,7 +8,19 @@ interface Size {
     height: number;
 }
 
-const useComponentSize = (): [React.RefObject<HTMLDivElement>, Size] => {
+
+interface ImageEditorProps {
+    routeState: [ClimbingRoute, (value: (((prevState: ClimbingRoute) => ClimbingRoute) | ClimbingRoute)) => void]
+    highlightedState: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void]
+    selectedState: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void]
+}
+
+export default function ImageEditor(props: ImageEditorProps) {
+    const [route, setRoute] = props.routeState //climbing route state
+    const [highlighted, setHighlighted] = props.highlightedState
+    const [selected, setSelected] = props.selectedState
+    const [possibleIds, setPossibleIds] = useState<string[]>([])
+
     const ref = useRef<HTMLDivElement>(null);
     const [size, setSize] = useState<Size>({ width: 0, height: 0 });
 
@@ -27,27 +39,9 @@ const useComponentSize = (): [React.RefObject<HTMLDivElement>, Size] => {
         return () => {
             window.removeEventListener("resize", handleResize);
         };
-    }, []);
-
-    return [ref, size];
-};
-
-
-interface ImageEditorProps {
-    routeState: [ClimbingRoute, (value: (((prevState: ClimbingRoute) => ClimbingRoute) | ClimbingRoute)) => void]
-    highlightedState: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void]
-    selectedState: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void]
-}
-
-export default function ImageEditor(props: ImageEditorProps) {
-    const [route, setRoute] = props.routeState //climbing route state
-    const [highlighted, setHighlighted] = props.highlightedState
-    const [selected, setSelected] = props.selectedState
-    const [ref, size] = useComponentSize() //image size state
-    const [possibleIds, setPossibleIds] = useState<string[]>([])
+    }, [route]);
 
     useEffect(() => {
-        const truth = selected != null
         if(selected != null) {
             const parent = route.naturals.filter(nat => nat.id == selected)
             if(parent.length > 0) {
@@ -63,6 +57,8 @@ export default function ImageEditor(props: ImageEditorProps) {
     }, [route, selected]);
 
     const handleStop = (id: string, data: { x: number; y: number }) => {
+        // console.log("stop", data.x, data.y)
+        // console.log("size", size)
         const allChildren = route.naturals.flatMap(it => [it.hold1id, it.hold2id])
         setSelected(
             allChildren.includes(id)
@@ -71,6 +67,7 @@ export default function ImageEditor(props: ImageEditorProps) {
         )
 
         const parent = route.holds.filter(it => it.id == id)[0]
+        // console.log("parent", parent.x, parent.y)
         const child: HoldData = {
             id: parent.id,
             x: (data.x / size.width) * 100 + parent.x,
