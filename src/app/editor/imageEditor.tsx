@@ -47,6 +47,7 @@ export default function ImageEditor(props: ImageEditorProps) {
     const [highlighted, setHighlighted] = props.highlightedState
     const [selected, setSelected] = props.selectedState
     const [ref, size] = useComponentSize() //image size state
+    const [isDragging, setIsDragging] = useState(false);
 
     const handleStop = (id: string, data: { x: number; y: number }) => {
         const parent = route.holds.filter(it => it.id == id)[0]
@@ -137,7 +138,11 @@ export default function ImageEditor(props: ImageEditorProps) {
                     <Draggable
                         bounds={"parent"}
                         key={hold.id}
-                        onStop={(e, data) => handleStop(hold.id, data)}
+                        onStart={() => setIsDragging(true)}
+                        onStop={(e, data) => {
+                            setTimeout(() => setIsDragging(false), 0);  // This is a hack to prevent the click event from firing after dragging
+                            handleStop(hold.id, data)
+                        }}
                         position={{x: 0, y: 0}}
                     >
                         <div style={{
@@ -149,14 +154,17 @@ export default function ImageEditor(props: ImageEditorProps) {
                         }}     
                         onMouseEnter = {() => setHighlighted(hold.id)}
                         onMouseLeave = {() => setHighlighted(null)}
-                        onClick = {() => setSelected(selected === hold.id ? null : hold.id)}
+                        onClick = {() => {
+                            if(!isDragging){
+                                setSelected(selected === hold.id ? null : hold.id)
+                            }
+                        }}
                         >
                             <div style={{
                                 position: "relative",
                                 width: "50px",
                                 height: "50px",
                                 backgroundColor: determineHoldColor(hold.id),
-                                // backgroundColor: "rgba(255, 255, 255, 0.5)", // Semi-transparent white box
                                 transform: "translate(-50%, -50%)", // This centers the box at the hold.x% and hold.y% position
                             }}>
                             </div>
