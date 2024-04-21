@@ -14,5 +14,6 @@ export default async function Page() {
 
 async function readDirectories() {
     const dir = path.join(process.cwd(), 'public/json')
-    return fs.readdirSync(dir)
+    const files =  fs.readdirSync(dir)
+    return files.map(file => file.substring(0, file.lastIndexOf(".")));
 }
