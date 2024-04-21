@@ -30,14 +30,14 @@ jobs:
         run: npm run build
 
       - name: Create .nojekyll file
-        run: touch ./out/.nojekyll
+        run: touch /.nojekyll
 
       - name: Create CNAME file
-        run: echo "settr.pro" > ./out/CNAME # Change to your domain
+        run: echo "settr.pro" > ./CNAME # Change to your domain
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4.5.0
         with:
           branch: gh-pages # The branch the action should deploy to.
-          folder: website/out # The folder the action should deploy.
+          folder: out # The folder the action should deploy.
           clean: true # Automatically remove deleted files from the deploy branch
