@@ -63,6 +63,6 @@ function RouteButton(props: RouteButtonProps) {
     >
         <Typography variant={"h3"}>{props.route.grade}</Typography>
         <Typography variant={"h5"}>{props.route.name}</Typography>
-        <Typography style={{marginLeft: "auto"}}>Set by: {props.route.setter}</Typography>
+        <Typography style={{marginLeft: "auto"}}>Set By: {props.route.setter}</Typography>
     </Stack>
 }

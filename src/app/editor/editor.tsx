@@ -26,17 +26,28 @@ export const useConfirmOnPageExit = (message: string) => {
     }, [message]); // Dependency on 'message' so it updates if message changes
 };
 
-const useMobileDetect = () => {
+const useMobileDetectByWidth = () => {
     const [isMobile, setIsMobile] = useState(false);
 
     useEffect(() => {
-        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-        // Checks for mobile device user-agent patterns
-        setIsMobile(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase()));
+        const handleResize = () => {
+            // Set the width threshold for mobile devices
+            setIsMobile(window.innerWidth <= 900);
+        };
+
+        // Check on initial mount (in case the page is opened on a mobile device)
+        handleResize();
+
+        // Set up resize event listener
+        window.addEventListener("resize", handleResize);
+
+        // Clean up
+        return () => window.removeEventListener("resize", handleResize);
     }, []);
 
     return isMobile;
 };
+
 
 
 interface RouteEditorProps {
@@ -54,11 +65,11 @@ function RouteEditor(props: RouteEditorProps) {
     const [highlightedHold, setHighlightedHold]: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void] = useState<string|null>(null)
     const [selectedHold, setSelectedHold]: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void] = useState<string|null>(null)
 
-    const isMobile = useMobileDetect()
+    const isMobile = useMobileDetectByWidth()
 
     return <>
         {isMobile
-            ? <Typography>The Editor is not supported on your display size</Typography>
+            ? <Typography align={"center"} padding={"1rem"}>The Editor is not supported on your display size</Typography>
             : <Stack direction={"row"}>
                 <Box style={{width: "65%", maxHeight: "90vh", backgroundColor: "red", overflow: "auto"}} padding={"1rem"}>
                     <ImageEditor
