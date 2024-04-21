@@ -96,22 +96,6 @@ export default function ImageEditor(props: ImageEditorProps) {
         console.log(route.holds)
     };
 
-
-    function selectedHandler(id: string): string {
-        console.log("selecthandler", possibleIds, id)
-        if (possibleIds.includes(id)){
-            console.log("outlines being drawn")
-            return selectColor
-        }
-        // route.naturals.forEach(natural => {
-        //     if (natural.hold1id === id || natural.hold2id === id){
-        //         return selectColor
-        //     }
-        // })
-        return "none"
-    }
-
-
     useEffect(() => {
         console.log("route update", route)
     }, [route]);
