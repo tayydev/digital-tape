@@ -136,12 +136,16 @@ export default function ImageEditor(props: ImageEditorProps) {
                             left: `${hold.x}%`,
                             width: "1px",
                             height: "1px",
-                        }}>
+                        }}     
+                        onMouseEnter = {() => setHighlighted(hold.id)}
+                        onMouseLeave = {() => setHighlighted(null)}
+                        >
                             <div style={{
                                 position: "relative",
                                 width: "50px",
                                 height: "50px",
-                                backgroundColor: "rgba(255, 255, 255, 0.5)", // Semi-transparent white box
+                                backgroundColor: (hold.id === highlighted) ? "rgba(255, 255, 255, 0.7)" : "rgba(255, 255, 255, 0.5)",
+                                // backgroundColor: "rgba(255, 255, 255, 0.5)", // Semi-transparent white box
                                 transform: "translate(-50%, -50%)", // This centers the box at the hold.x% and hold.y% position
                             }}>
                             </div>
