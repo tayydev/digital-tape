@@ -79,6 +79,16 @@ export default function ImageEditor(props: ImageEditorProps) {
         return newHold;
     };
 
+    function determineHoldColor(id: string): string {
+        if (selected === id) {
+            return route.color2;
+        } else if (highlighted === id) {
+            return route.color1;
+        } else {
+            return "rgba(255, 255, 255, 0.5)";
+        }
+    }
+
     function createNatural(){
         // Create a natural hold which contains two holds with a line between them
         const hold1id: HoldData = createHold(45, 50)
@@ -139,12 +149,13 @@ export default function ImageEditor(props: ImageEditorProps) {
                         }}     
                         onMouseEnter = {() => setHighlighted(hold.id)}
                         onMouseLeave = {() => setHighlighted(null)}
+                        onClick = {() => setSelected(selected === hold.id ? null : hold.id)}
                         >
                             <div style={{
                                 position: "relative",
                                 width: "50px",
                                 height: "50px",
-                                backgroundColor: (hold.id === highlighted) ? "rgba(255, 255, 255, 0.7)" : "rgba(255, 255, 255, 0.5)",
+                                backgroundColor: determineHoldColor(hold.id),
                                 // backgroundColor: "rgba(255, 255, 255, 0.5)", // Semi-transparent white box
                                 transform: "translate(-50%, -50%)", // This centers the box at the hold.x% and hold.y% position
                             }}>
