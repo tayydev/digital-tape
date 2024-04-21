@@ -1,5 +1,3 @@
-// import { useParams } from "next/navigation";
-import {Typography} from "@mui/material";
 import path from "path";
 import fs from "fs";
 import {ClimbingRoute} from "../../editor/climbingRoute";

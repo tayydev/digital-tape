@@ -51,8 +51,6 @@ export default function HoldEditor(props: HoldEditorProps) {
     //we want to take our holds and naturals and make a list of effective hold ids
     const [unownedHolds, setUnownedHolds] = useState<HoldData[]>([])
 
-    console.log("image names", props.imageNames)
-
     useEffect(() => {
         const naturalOwnedIds = route.naturals.flatMap(it => [it.hold1id, it.hold2id])
         const unowned = route.holds.filter(it => !naturalOwnedIds.includes(it.id))
@@ -114,6 +112,7 @@ export default function HoldEditor(props: HoldEditorProps) {
         )
     }
 
+    console.log("image", route.image)
 
     return <Stack spacing={1} padding={'1rem'} style={{width: "100%"}}>
         <Box/>
@@ -121,19 +120,19 @@ export default function HoldEditor(props: HoldEditorProps) {
             <FormControl>
                 <InputLabel id="demo-simple-select-img">Wall</InputLabel>
                 <Select
-                    value={route.grade}
+                    value={route.image.substring(5)}
                     labelId="demo-simple-select-img"
                     label="Wall"
                     onChange={(event) => {
                         setRoute({
                             ...route,
-                            image: event.target.value
+                            image: `/img/${event.target.value}`
                         })
                     }}
                 >
-                    {/*{imgs.map(grade =>*/}
-                    {/*    <MenuItem value={grade}>{grade}</MenuItem>*/}
-                    {/*)}*/}
+                    {props.imageNames.map(img =>
+                        <MenuItem value={img}>{img}</MenuItem>
+                    )}
                 </Select>
 
             </FormControl>
