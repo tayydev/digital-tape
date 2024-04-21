@@ -14,7 +14,7 @@ interface RenderPreviewProps {
 
 export default function JsonPreview(props: RenderPreviewProps) {
     return <Stack>
-        <Typography align={"center"} variant={"h2"} padding={"0.5rem"}>{props.json.name}</Typography>
+        <Typography align={"center"} variant={"h2"} padding={"0.5rem"} fontWeight={"bold"}>{props.json.name}</Typography>
         <Typography align={"center"} variant={"h5"}>
             {props.json.grade} - {props.json.setter}
         </Typography>

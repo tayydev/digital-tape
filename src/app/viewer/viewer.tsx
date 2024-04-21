@@ -27,7 +27,7 @@ export default function RouteViewer(props: RouteViewerProps) {
             maxWidth={"200mm"}
             marginX={"auto"}
         >
-            <Typography variant={"h2"}>
+            <Typography variant={"h2"} fontWeight={"bold"}>
                 Saved Routes
             </Typography>
             {Array.from(props.routes).map(pair => (
