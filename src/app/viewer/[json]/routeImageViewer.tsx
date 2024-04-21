@@ -6,21 +6,27 @@ interface RouteViewerProps {
     climbingRoute: ClimbingRoute
 }
 
+function hexToRgba(hex: string, alpha: number): string {
+    const [r, g, b] = hex.match(/\w\w/g)!.map(x => parseInt(x, 16));
+    return `rgba(${r},${g},${b},${alpha})`;
+}
+
 export default function RouteImageViewer(props: RouteViewerProps) {
     const ref = useRef<HTMLDivElement>(null);
+    const opacity = 0.75;
 
 return (
     <div>
         <svg style={{ position: 'absolute', width: 0, height: 0 }}>
         <defs>
-            <pattern id="cautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
-                <rect width="10" height="20" fill={props.climbingRoute.color1}/>
-                <rect x="10" width="10" height="20" fill={props.climbingRoute.color2 ? props.climbingRoute.color2 : props.climbingRoute.color1}/>
-            </pattern>
-            <pattern id="lightCautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
-                <rect width="10" height="20" fill={lightenHexColor(props.climbingRoute.color1, 0.2)}/>
-                <rect x="10" width="10" height="20" fill={props.climbingRoute.color2 ? lightenHexColor(props.climbingRoute.color2, 0.2) : lightenHexColor(props.climbingRoute.color1, 0.2)}/>
-            </pattern>
+                <pattern id="cautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
+                    <rect width="10" height="20" fill={hexToRgba(props.climbingRoute.color1, opacity)}/>
+                    <rect x="10" width="10" height="20" fill={props.climbingRoute.color2 ? hexToRgba(props.climbingRoute.color2, opacity) : hexToRgba(props.climbingRoute.color1, opacity)}/>
+                </pattern>
+                <pattern id="lightCautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
+                    <rect width="10" height="20" fill={hexToRgba(lightenHexColor(props.climbingRoute.color1, 0.2), opacity)}/>
+                    <rect x="10" width="10" height="20" fill={props.climbingRoute.color2 ? hexToRgba(lightenHexColor(props.climbingRoute.color2, 0.2), opacity) : hexToRgba(lightenHexColor(props.climbingRoute.color1, 0.2), opacity)}/>
+                </pattern>
         </defs>
     </svg>
         <div style={{ position: 'relative', width: '100%', height: 'auto'}}>
