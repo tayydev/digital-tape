@@ -2,6 +2,7 @@ import Draggable from "react-draggable";
 import React, {useRef, useEffect, useState, LegacyRef} from 'react';
 import {ClimbingRoute, HoldData, NaturalData} from "@/app/editor/climbingRoute";
 import { lightenHexColor, selectColor } from "../theme";
+import { hexToRgb } from "@mui/material";
 
 interface Size {
     width: number;
@@ -81,17 +82,24 @@ export default function ImageEditor(props: ImageEditorProps) {
         )
     };
 
+    function hexToRgba(hex: string, alpha: number): string {
+        const [r, g, b] = hex.match(/\w\w/g)!.map(x => parseInt(x, 16));
+        return `rgba(${r},${g},${b},${alpha})`;
+    }
+
+    const opacity = 0.75;
+
     return (
         <div>
             <svg style={{ position: 'absolute', width: 0, height: 0 }}>
             <defs>
                 <pattern id="cautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
-                    <rect width="10" height="20" fill={route.color1}/>
-                    <rect x="10" width="10" height="20" fill={route.color2 ? route.color2 : route.color1}/>
+                    <rect width="10" height="20" fill={hexToRgba(route.color1, opacity)}/>
+                    <rect x="10" width="10" height="20" fill={route.color2 ? hexToRgba(route.color2, opacity) : hexToRgba(route.color1, opacity)}/>
                 </pattern>
                 <pattern id="lightCautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
-                    <rect width="10" height="20" fill={lightenHexColor(route.color1, 0.2)}/>
-                    <rect x="10" width="10" height="20" fill={route.color2 ? lightenHexColor(route.color2, 0.2) : lightenHexColor(route.color1, 0.2)}/>
+                    <rect width="10" height="20" fill={hexToRgba(lightenHexColor(route.color1, 0.2), opacity)}/>
+                    <rect x="10" width="10" height="20" fill={route.color2 ? hexToRgba(lightenHexColor(route.color2, 0.2), opacity) : hexToRgba(lightenHexColor(route.color1, 0.2), opacity)}/>
                 </pattern>
             </defs>
         </svg>
