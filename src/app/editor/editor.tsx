@@ -7,6 +7,7 @@ import {ClimbingRoute, defaultRoute} from "@/app/editor/climbingRoute";
 import ImageEditor from "@/app/editor/imageEditor";
 import HoldEditor from "@/app/editor/holdEditor";
 import {Box} from "@mui/system";
+import {Typography} from "@mui/material";
 
 // This function sets up a confirmation dialog when the user attempts to leave the page.
 export const useConfirmOnPageExit = (message: string) => {
@@ -25,6 +26,18 @@ export const useConfirmOnPageExit = (message: string) => {
     }, [message]); // Dependency on 'message' so it updates if message changes
 };
 
+const useMobileDetect = () => {
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+        // Checks for mobile device user-agent patterns
+        setIsMobile(/android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent.toLowerCase()));
+    }, []);
+
+    return isMobile;
+};
+
 
 interface RouteEditorProps {
     images: string[]
@@ -41,24 +54,29 @@ function RouteEditor(props: RouteEditorProps) {
     const [highlightedHold, setHighlightedHold]: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void] = useState<string|null>(null)
     const [selectedHold, setSelectedHold]: [string | null, (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void] = useState<string|null>(null)
 
+    const isMobile = useMobileDetect()
+
     return <>
-        <Stack direction={"row"}>
-            <Box style={{width: "65%"}} padding={"1rem"}>
-                <ImageEditor
-                    routeState={[route, setRoute]}
-                    highlightedState={[highlightedHold, setHighlightedHold]}
-                    selectedState={[selectedHold, setSelectedHold]}
-                />
-            </Box>
-            <Box style={{width: "35%"}}>
-                <HoldEditor
-                    routeState={[route, setRoute]}
-                    highlightedState={[highlightedHold, setHighlightedHold]}
-                    selectedState={[selectedHold, setSelectedHold]}
-                    imageNames={props.images}
-                />
-            </Box>
-        </Stack>
+        {isMobile
+            ? <Typography>The Editor is not supported on your display size</Typography>
+            : <Stack direction={"row"}>
+                <Box style={{width: "65%", maxHeight: "90vh", backgroundColor: "red", overflow: "auto"}} padding={"1rem"}>
+                    <ImageEditor
+                        routeState={[route, setRoute]}
+                        highlightedState={[highlightedHold, setHighlightedHold]}
+                        selectedState={[selectedHold, setSelectedHold]}
+                    />
+                </Box>
+                <Box style={{width: "35%"}}>
+                    <HoldEditor
+                        routeState={[route, setRoute]}
+                        highlightedState={[highlightedHold, setHighlightedHold]}
+                        selectedState={[selectedHold, setSelectedHold]}
+                        imageNames={props.images}
+                    />
+                </Box>
+            </Stack>
+        }
     </>
 }
 
