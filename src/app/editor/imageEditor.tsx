@@ -48,9 +48,38 @@ export default function ImageEditor(props: ImageEditorProps) {
     const [highlighted, setHighlighted] = props.highlightedState
     const [selected, setSelected] = props.selectedState
     const [ref, size] = useComponentSize() //image size state
+    const [possibleIds, setPossibleIds] = useState<string[]>([])
+
+    useEffect(() => {
+        console.log("selected", selected)
+        const truth = selected != null
+        console.log("is not null", truth)
+        if(selected != null) {
+            console.log("got in")
+            const parent = route.naturals.filter(nat => nat.id == selected)
+            if(parent.length > 0) {
+                setPossibleIds([parent[0].hold1id, parent[0].id, parent[0].hold2id])
+                console.log("sett", possibleIds)
+            }
+            else {
+                setPossibleIds([selected])
+            }
+        }
+        else {
+            console.log("fuck you")
+            setPossibleIds([selected ?? "help"])
+        }
+        console.log("pos", possibleIds)
+    }, [route, selected]);
 
     const handleStop = (id: string, data: { x: number; y: number }) => {
-        setSelected(id)
+        const allChildren = route.naturals.flatMap(it => [it.hold1id, it.hold2id])
+        setSelected(
+            allChildren.includes(id)
+                ? route.naturals.filter(nat => nat.hold1id == id || nat.hold2id == id)[0].id
+                : id
+        )
+        console.log("handle stop select", selected, id, allChildren)
 
         const parent = route.holds.filter(it => it.id == id)[0]
         const child: HoldData = {
@@ -68,15 +97,17 @@ export default function ImageEditor(props: ImageEditorProps) {
     };
 
 
-    function selectedHandler(id: string): string{
-        if (selected === id){
+    function selectedHandler(id: string): string {
+        console.log("selecthandler", possibleIds, id)
+        if (possibleIds.includes(id)){
+            console.log("outlines being drawn")
             return selectColor
         }
-        route.naturals.forEach(natural => {
-            if (natural.hold1id === id || natural.hold2id === id){
-                return selectColor
-            }
-        })
+        // route.naturals.forEach(natural => {
+        //     if (natural.hold1id === id || natural.hold2id === id){
+        //         return selectColor
+        //     }
+        // })
         return "none"
     }
 
@@ -107,38 +138,18 @@ export default function ImageEditor(props: ImageEditorProps) {
                     style={{width: '100%', height: 'auto'}}
                 />
                 {route.holds.map((hold: HoldData) => (
-                    <Draggable
-                        bounds={"parent"}
-                        key={hold.id}
-                        onStop={(e, data) => handleStop(hold.id, data)}
-                        position={{x: 0, y: 0}}
-                    >
-                        <div style={{
-                            position: "absolute",
-                            top: `${hold.y}%`,
-                            left: `${hold.x}%`,
-                            width: "1px",
-                            height: "1px",
-                        }}
-                             onMouseEnter = {() => setHighlighted(hold.id)}
-                             onMouseLeave = {() => setHighlighted(null)}
-                        >
-                            <svg width="50" height="50" style={{transform: "translate(-50%, -50%)"}}>
-                                <circle 
-                                    cx="25" 
-                                    cy="25" 
-                                    r="23" 
-                                    fill={highlighted === hold.id ? "url(#lightCautionPattern)" : "url(#cautionPattern)"}
-                                    stroke={selectedHandler(hold.id)}
-                                    strokeWidth={selected === hold.id ? "3" : "0"} 
-                                />
-                            </svg>
-                        </div>
-                    </Draggable>
+                    <HoldNode
+                        hold={hold}
+                        setHighlighted={() => setHighlighted(hold.id)}
+                        unHighlight={() => setHighlighted(null)}
+                        isHighlighted={highlighted === hold.id}
+                        isSelected={possibleIds.includes(hold.id)}
+                        handleStop={handleStop}
+                    />
                 ))}
                 {route.naturals.map((natural: NaturalData) => {
-                    const hold1 = route.holds.find(hold => hold.id === natural.hold1id);
-                    const hold2 = route.holds.find(hold => hold.id === natural.hold2id);
+                    const hold1 = route.holds.find(hold => hold.id === natural.hold1id)!;
+                    const hold2 = route.holds.find(hold => hold.id === natural.hold2id)!;
 
                     return (
                         <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none'}}>
@@ -156,4 +167,44 @@ export default function ImageEditor(props: ImageEditorProps) {
             </div>
         </div>
     );
+}
+
+interface HoldNodeProps {
+    hold: HoldData,
+    setHighlighted: () => void,
+    unHighlight: () => void,
+    isHighlighted: boolean,
+    isSelected: boolean,
+    handleStop: (id: string, data: { x: number; y: number }) => void
+}
+
+function HoldNode(props: HoldNodeProps) {
+    return <Draggable
+            bounds={"parent"}
+            key={props.hold.id}
+            onStop={(e, data) => props.handleStop(props.hold.id, data)}
+            position={{x: 0, y: 0}}
+        >
+            <div style={{
+                position: "absolute",
+                top: `${props.hold.y}%`,
+                left: `${props.hold.x}%`,
+                width: "1px",
+                height: "1px",
+            }}
+                 onMouseEnter = {() => props.setHighlighted()}
+                 onMouseLeave = {() => props.unHighlight()}
+            >
+                <svg width="50" height="50" style={{transform: "translate(-50%, -50%)"}}>
+                    <circle
+                        cx="25"
+                        cy="25"
+                        r="23"
+                        fill={props.isHighlighted ? "url(#lightCautionPattern)" : "url(#cautionPattern)"}
+                        stroke={props.isSelected ? selectColor : "none"}
+                        strokeWidth={"3"}
+                    />
+                </svg>
+            </div>
+        </Draggable>
 }
