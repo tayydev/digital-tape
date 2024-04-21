@@ -61,8 +61,8 @@ function RouteButton(props: RouteButtonProps) {
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
     >
-        <Typography variant={"h3"}>{props.route.grade}</Typography>
-        <Typography variant={"h5"}>{props.route.name}</Typography>
+        <Typography variant={"h4"}>{props.route.grade}</Typography>
+        <Typography variant={"h6"}>{props.route.name}</Typography>
         <Typography style={{marginLeft: "auto"}}>Set By: {props.route.setter}</Typography>
     </Stack>
 }
