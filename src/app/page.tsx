@@ -1,7 +1,7 @@
 import Stack from "@mui/material/Stack";
 import {Typography} from "@mui/material";
 import React from "react";
-import {Box} from "@mui/system";
+import {Box} from "@mui/material";
 
 export default function Home() {
   return (
