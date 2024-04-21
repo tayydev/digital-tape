@@ -83,9 +83,6 @@ export default function ImageEditor(props: ImageEditorProps) {
     };
 
     function determineHoldColor(id: string): string {
-        if (selected === id) {
-            return selectColor;
-        }
         if (highlighted === id) {
             return "url(#lightCautionPattern)";
         }
@@ -166,7 +163,14 @@ export default function ImageEditor(props: ImageEditorProps) {
                              onMouseLeave = {() => setHighlighted(null)}
                         >
                             <svg width="50" height="50" style={{transform: "translate(-50%, -50%)"}}>
-                                <circle cx="25" cy="25" r="25" fill={determineHoldColor(hold.id)} />
+                                <circle 
+                                    cx="25" 
+                                    cy="25" 
+                                    r="23" 
+                                    fill={highlighted === hold.id ? "url(#lightCautionPattern)" : "url(#cautionPattern)"}
+                                    stroke={selected === hold.id ? selectColor : "none"} 
+                                    strokeWidth={selected === hold.id ? "3" : "0"} 
+                                />
                             </svg>
                             {/* <div style={{
                                 position: "relative",
