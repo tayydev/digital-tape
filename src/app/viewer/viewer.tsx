@@ -1,6 +1,8 @@
 "use client"
 import { Button, Modal } from '@mui/material';
 import { useEffect, useState } from 'react';
+import RouteImageViewer from './routeImageViewer';
+import { HoldData, NaturalData } from '../editor/climbingRoute';
 
 export default function RouteViewer() {
     const [files, setFiles] = useState<{name: string}[]>([]);
@@ -41,8 +43,20 @@ export default function RouteViewer() {
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                     {selectedFile && (
                         <>
+                            
                             <h2>{selectedFile.name}</h2>
-                            <img src={selectedFile.image} alt={selectedFile.name} style = {{width: "50%"}} />
+                            <div style={{width: "50%", height: 'auto'}}>
+                                <RouteImageViewer 
+                                    color1={selectedFile.color1}
+                                    color2={selectedFile.color2}
+                                    image={selectedFile.image}
+                                    name={selectedFile.name}
+                                    grade={selectedFile.grade}
+                                    setter={selectedFile.setter}
+                                    holds={selectedFile.holds}
+                                    naturals={selectedFile.naturals}
+                                />
+                            </div>
                             <Button onClick={handleClose}>Close</Button>
                         </>
                     )}
