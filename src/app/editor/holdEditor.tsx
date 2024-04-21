@@ -20,6 +20,8 @@ import {saveAs} from "file-saver";
 import {Dropdown} from "@mui/base";
 import {HexColorPicker} from "react-colorful";
 import {GetStaticProps} from "next";
+import DeleteIcon from '@mui/icons-material/Delete';
+import {DeleteOutline} from "@mui/icons-material";
 
 
 // export async function getArticles(fs: any): Promise<string[]> {
@@ -308,7 +310,16 @@ function SingleHold(props: SingleHoldProps) {
         >
             <Stack direction={"row"} alignItems={"center"} padding={"0.5rem"}>
                 <Typography fontWeight={"bold"}>Hold </Typography>
-                <Typography marginLeft={"auto"} fontWeight={"bold"}>{props.name}</Typography>
+                <Typography marginLeft={"0.5rem"} fontWeight={"bold"} color={"lightgrey"}>({props.name})</Typography>
+                <Button
+                    variant="text"
+                    startIcon={
+                        <Stack direction={"row"} justifyContent={"center"} style={{width: "100%"}}>
+                            <DeleteOutline style={{margin: "0.5rem"}}/>
+                        </Stack>
+                    }
+                    style={{ marginLeft: "auto", color: "red", minWidth: "0"}}
+                />
             </Stack>
         </Box>
     </>
