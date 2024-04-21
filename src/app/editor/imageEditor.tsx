@@ -82,13 +82,6 @@ export default function ImageEditor(props: ImageEditorProps) {
         return newHold;
     };
 
-    function determineHoldColor(id: string): string {
-        if (highlighted === id) {
-            return "url(#lightCautionPattern)";
-        }
-        return "url(#cautionPattern)";
-    }
-
     function createNatural(){
         // Create a natural hold which contains two holds with a line between them
         const hold1id: HoldData = createHold(45, 50)
@@ -119,6 +112,18 @@ export default function ImageEditor(props: ImageEditorProps) {
         saveAs(blob, `${route.name}.json`);
     };
 
+    function selectedHandler(id: string): string{
+        if (selected === id){
+            return selectColor
+        }
+        route.naturals.forEach(natural => {
+            if (natural.hold1id === id || natural.hold2id === id){
+                return selectColor
+            }
+        })
+        return "none"
+    }
+
 
     useEffect(() => {
         console.log("route update", route)
@@ -138,7 +143,7 @@ export default function ImageEditor(props: ImageEditorProps) {
                 </pattern>
             </defs>
         </svg>
-            <div style={{ position: 'relative', width: '100%', height: 'auto' }}>
+            <div style={{ position: 'relative', width: '100%', height: 'auto'}}>
                 <img
                     ref={ref}
                     src={route.image}
@@ -168,20 +173,10 @@ export default function ImageEditor(props: ImageEditorProps) {
                                     cy="25" 
                                     r="23" 
                                     fill={highlighted === hold.id ? "url(#lightCautionPattern)" : "url(#cautionPattern)"}
-                                    stroke={selected === hold.id ? selectColor : "none"} 
+                                    stroke={selectedHandler(hold.id)}
                                     strokeWidth={selected === hold.id ? "3" : "0"} 
                                 />
                             </svg>
-                            {/* <div style={{
-                                position: "relative",
-                                width: "50px",
-                                height: "50px",
-                                backgroundColor: determineHoldColor(hold.id),
-                                borderRadius: "50%",
-                                transform: "translate(-50%, -50%)", // This centers the box at the hold.x% and hold.y% position
-                            }}
-                            >
-                            </div> */}
                         </div>
                     </Draggable>
                 ))}
@@ -191,12 +186,6 @@ export default function ImageEditor(props: ImageEditorProps) {
 
                     return (
                         <svg style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', pointerEvents: 'none'}}>
-                            {/* <defs>
-                                <pattern id="cautionPattern" patternUnits="userSpaceOnUse" width="20" height="20" patternTransform="rotate(-45)">
-                                    <rect width="10" height="20" fill={route.color1}/>
-                                    <rect x="10" width="10" height="20" fill={route.color2 ? route.color2 : route.color1}/>
-                                </pattern>
-                            </defs> */}
                             <line
                                 x1={`${hold1.x}%`}
                                 y1={`${hold1.y}%`}
@@ -205,7 +194,6 @@ export default function ImageEditor(props: ImageEditorProps) {
                                 stroke="url(#cautionPattern)"
                                 strokeWidth=".5rem"
                             />
-                            
                         </svg>
                     );
                 })}
